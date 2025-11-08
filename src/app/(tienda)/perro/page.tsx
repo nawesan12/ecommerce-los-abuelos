@@ -1,20 +1,18 @@
-"use client";
+import BrandsCarousel from "@/src/components/perro/BrandsCarousel";
+import DogCategories from "@/src/components/perro/CategorieDog";
+import HeroPerro from "@/src/components/perro/heroPerro";
+import ProductsSection from "@/src/components/products/productsSection";
 import React from "react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 
 export default function Page() {
 	return (
-		<div className="text-center pt-12">
-			<h1 className="text-3xl capitalize font-bold mb-4">Perro</h1>
-		</div>
-	);
-}
+		<>
+			<HeroPerro />
 
-{
-	/* <Button
-				variant={"default"}
-				onClick={() => toast.success("Tocaste el boton")}>
-				Tocame
-			</Button> */
+			<DogCategories />
+			<BrandsCarousel />
+
+			<ProductsSection />
+		</>
+	);
 }

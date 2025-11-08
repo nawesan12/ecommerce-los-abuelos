@@ -1,4 +1,3 @@
-// src/components/products/productsSection.tsx
 import ProductCard from "./ProductCard";
 
 export default function ProductsSection() {
@@ -7,24 +6,6 @@ export default function ProductsSection() {
 			<div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-12">
 				{/* Sidebar de Filtros */}
 				<aside className="space-y-10">
-					{/* Categoría */}
-					<div>
-						<h3 className="font-semibold text-gray-800 mb-3 text-sm">
-							Filtrar por Categoría
-						</h3>
-						<ul className="space-y-2 text-sm text-gray-600">
-							<li className="hover:text-[#F32947] cursor-pointer">
-								Perro
-							</li>
-							<li className="hover:text-[#F32947] cursor-pointer">
-								Gato
-							</li>
-							<li className="hover:text-[#F32947] cursor-pointer">
-								Accesorios
-							</li>
-						</ul>
-					</div>
-
 					{/* Precio */}
 					<div>
 						<h3 className="font-semibold text-gray-800 mb-3 text-sm">

@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint",
+    "clean": "rm -rf .next node_modules/.cache",
+    "dev:clean": "npm run clean && npm run dev"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.11",
