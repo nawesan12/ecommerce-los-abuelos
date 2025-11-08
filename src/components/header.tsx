@@ -341,7 +341,7 @@ export default function Header() {
 									/>
 									<IconShoppingCart
 										size={28}
-										stroke={2}
+										stroke={1}
 										className="hover:text-[#F32947] transition"
 									/>
 								</div>

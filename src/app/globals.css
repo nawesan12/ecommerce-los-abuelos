@@ -121,3 +121,25 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes marquee-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.marquee-track,
+.marquee-track2 {
+  animation: marquee-left 23s linear infinite;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.marquee-track2 {
+  position: absolute;
+  top: 0;
+  left: 100%;
+}

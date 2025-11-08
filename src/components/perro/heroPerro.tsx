@@ -1,11 +1,17 @@
+"use client";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function HeroPerro() {
 	return (
-		<section className="bg-white w-full pt-10 pb-5">
+		<section className="bg-white w-full pt-16 sm:pt-20 pb-10">
 			<div className="max-w-[1300px] mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-2 items-center gap-10">
 				{/* TEXTO */}
-				<div className="text-center md:text-left">
+				<motion.div
+					initial={{ opacity: 0, x: -40 }}
+					animate={{ opacity: 1, x: 0 }}
+					transition={{ duration: 0.7, ease: "easeOut" }}
+					className="text-center md:text-left">
 					<h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight text-[#0B1D4C]">
 						Todo para los{" "}
 						<span className="text-[#F32947]">PICHICHUS!</span>
@@ -16,13 +22,20 @@ export default function HeroPerro() {
 						sea feliz.
 					</p>
 
-					<button className="mt-6 px-8 py-3 bg-[#0B1D4C] text-white rounded-xl text-lg font-semibold hover:bg-[#F32947] transition-all">
+					<motion.button
+						whileHover={{ scale: 1.05 }}
+						whileTap={{ scale: 0.97 }}
+						className="mt-6 px-8 py-3 bg-[#0B1D4C] text-white rounded-xl text-lg font-semibold hover:bg-[#F32947] transition-all">
 						Ver Productos
-					</button>
-				</div>
+					</motion.button>
+				</motion.div>
 
 				{/* IMAGEN */}
-				<div className="flex justify-center md:justify-end">
+				<motion.div
+					initial={{ opacity: 0, y: 25 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
+					className="flex justify-center md:justify-end">
 					<Image
 						src="/img/HeroPerro.png"
 						alt="Perro feliz"
@@ -31,7 +44,7 @@ export default function HeroPerro() {
 						className="w-[260px] sm:w-[340px] md:w-[420px] lg:w-[500px] object-contain"
 						priority
 					/>
-				</div>
+				</motion.div>
 			</div>
 		</section>
 	);
