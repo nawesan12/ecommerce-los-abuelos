@@ -33,7 +33,7 @@ export default function CatCategories() {
 	return (
 		<section className="w-full max-w-[1300px] mx-auto px-6 py-16">
 			<h2 className="text-[26px] sm:text-[32px] font-extrabold mb-10 text-left">
-				PRODUCTOS PARA GATOS
+				PRODUCTOS PARA PERROS
 			</h2>
 
 			<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 sm:gap-8">

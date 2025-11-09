@@ -96,7 +96,7 @@ export default function HomePage() {
 
 			<ProductsSection />
 
-			<Footer />
+			
 		</div>
 	);
 }
