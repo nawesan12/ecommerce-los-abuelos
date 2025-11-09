@@ -334,6 +334,7 @@ export default function Header() {
 										stroke={2}
 										className="hover:text-[#F32947] transition"
 									/>
+
 									<IconUser
 										size={28}
 										stroke={2}
