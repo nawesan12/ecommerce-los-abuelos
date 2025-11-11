@@ -1,12 +1,13 @@
 import ProductCard from "./ProductCard";
+import { products } from "@/src/data/products";
 
 export default function ProductsSection() {
 	return (
 		<section className="w-full max-w-[1300px] mx-auto px-6 py-16">
 			<div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-12">
-				{/* Sidebar de Filtros */}
+				{/* SIDEBAR */}
 				<aside className="space-y-10">
-					{/* Precio */}
+					{/* Filtrar por Precio */}
 					<div>
 						<h3 className="font-semibold text-gray-800 mb-3 text-sm">
 							Filtrar por Precio
@@ -35,6 +36,13 @@ export default function ProductsSection() {
 									type="checkbox"
 									className="accent-[#F32947]"
 								/>{" "}
+								Advance
+							</label>
+							<label className="flex items-center gap-2">
+								<input
+									type="checkbox"
+									className="accent-[#F32947]"
+								/>{" "}
 								Royal Canin
 							</label>
 							<label className="flex items-center gap-2">
@@ -44,44 +52,15 @@ export default function ProductsSection() {
 								/>{" "}
 								Pedigree
 							</label>
-							<label className="flex items-center gap-2">
-								<input
-									type="checkbox"
-									className="accent-[#F32947]"
-								/>{" "}
-								Whiskas
-							</label>
-						</div>
-					</div>
-
-					{/* Tags */}
-					<div>
-						<h3 className="font-semibold text-gray-800 mb-3 text-sm">
-							Filtrar por Etiquetas
-						</h3>
-						<div className="flex flex-wrap gap-2 text-xs">
-							<span className="px-3 py-1 border rounded-full cursor-pointer hover:border-[#F32947] transition">
-								Comida perro
-							</span>
-							<span className="px-3 py-1 border rounded-full cursor-pointer hover:border-[#F32947] transition">
-								Comida gato
-							</span>
-							<span className="px-3 py-1 border rounded-full cursor-pointer hover:border-[#F32947] transition">
-								Premium
-							</span>
-							<span className="px-3 py-1 border rounded-full cursor-pointer hover:border-[#F32947] transition">
-								Económico
-							</span>
 						</div>
 					</div>
 				</aside>
 
-				{/* Sección de productos */}
+				{/* PRODUCTOS */}
 				<div className="space-y-10">
-					{/* Barra superior */}
+					{/* Barra Superior */}
 					<div className="flex justify-between items-center text-sm text-gray-600">
-						<p>Mostrando 12 resultados</p>
-
+						<p>Mostrando {products.length} resultados</p>
 						<select className="border rounded-md px-3 py-1">
 							<option>Ordenar por precio</option>
 							<option>Ordenar por nombre</option>
@@ -89,80 +68,17 @@ export default function ProductsSection() {
 						</select>
 					</div>
 
-					{/* Grid de productos */}
-					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-						<ProductCard
-							title={"Alimento para perro Pedigree Adulto 21KG"}
-							image={"/img/11.png"}
-							price={200}
-							href={""}
-						/>
-						<ProductCard
-							title={"Alimento para perro Pedigree Adulto 21KG"}
-							image={"/img/11.png"}
-							price={200}
-							href={""}
-						/>
-						<ProductCard
-							title={"Alimento para perro Pedigree Adulto 21KG"}
-							image={"/img/11.png"}
-							price={200}
-							href={""}
-						/>
-						<ProductCard
-							title={"Alimento para perro Pedigree Adulto 21KG"}
-							image={"/img/11.png"}
-							price={200}
-							href={""}
-						/>
-						<ProductCard
-							title={"Alimento para perro Pedigree Adulto 21KG"}
-							image={"/img/11.png"}
-							price={200}
-							href={""}
-						/>
-						<ProductCard
-							title={"Alimento para perro Pedigree Adulto 21KG"}
-							image={"/img/11.png"}
-							price={200}
-							href={""}
-						/>
-						<ProductCard
-							title={"Alimento para perro Pedigree Adulto 21KG"}
-							image={"/img/11.png"}
-							price={200}
-							href={""}
-						/>
-						<ProductCard
-							title={"Alimento para perro Pedigree Adulto 21KG"}
-							image={"/img/11.png"}
-							price={200}
-							href={""}
-						/>
-						<ProductCard
-							title={"Alimento para perro Pedigree Adulto 21KG"}
-							image={"/img/11.png"}
-							price={200}
-							href={""}
-						/>
-						<ProductCard
-							title={"Alimento para perro Pedigree Adulto 21KG"}
-							image={"/img/11.png"}
-							price={200}
-							href={""}
-						/>
-						<ProductCard
-							title={"Alimento para perro Pedigree Adulto 21KG"}
-							image={"/img/11.png"}
-							price={200}
-							href={""}
-						/>
-						<ProductCard
-							title={"Alimento para perro Pedigree Adulto 21KG"}
-							image={"/img/11.png"}
-							price={200}
-							href={""}
-						/>
+					{/* GRID */}
+					<div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+						{products.map((p) => (
+							<ProductCard
+								key={p.id}
+								title={p.title}
+								image={p.image}
+								price={p.price}
+								href={`/producto/${p.id}`}
+							/>
+						))}
 					</div>
 
 					{/* Paginación */}
