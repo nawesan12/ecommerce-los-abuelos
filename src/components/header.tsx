@@ -11,17 +11,29 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import Points from "./points";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "../stores/auth-store";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
 	const pathname = usePathname();
+
+	if (pathname.startsWith("/login") || pathname.startsWith("/register")) {
+		return null;
+	}
+
 	const [searchOpen, setSearchOpen] = useState(false);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const [touchStartX, setTouchStartX] = useState<number | null>(null);
+	const { user } = useAuth();
+	const router = useRouter();
 
 	useEffect(() => {
 		if (
 			pathname.startsWith("/nosotros") ||
 			pathname.startsWith("/contacto") ||
+			pathname.startsWith("/user") ||
+			pathname.startsWith("/liked") ||
+			pathname.startsWith("/carrito") ||
 			pathname.startsWith("/producto")
 		) {
 			setSearchOpen(true);
@@ -222,7 +234,7 @@ export default function Header() {
 								className="cursor-pointer hover:text-[#F32947] transition"
 							/>
 						</Link>
-						<Link href="/user">
+						<Link href={user ? "/user" : "/login"}>
 							<IconUser
 								size={30}
 								stroke={2}

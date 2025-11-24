@@ -34,13 +34,13 @@ const baseProducts: Product[] = [
   },
 ];
 
-// Genera 12 productos de demo sin romper nada
+
 export const products: Product[] = Array.from({ length: 12 }, (_, i) => {
   const base = baseProducts[i % baseProducts.length];
   return {
     ...base,
     id: `${base.id}-demo-${i + 1}`,                 // id único
-    title: `${base.title} · Var ${i + 1}`,          // título distinto (opcional)
-    price: base.price + (i % 3) * 500,              // variación mínima (opcional)
+    title: `${base.title} · Var ${i + 1}`,          
+    price: base.price + (i % 3) * 500,              
   };
 });
