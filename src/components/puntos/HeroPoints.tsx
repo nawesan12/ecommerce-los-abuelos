@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export default function HeroPoints() {
 	return (
-		<section className="bg-white w-full pt-16 sm:pt-20 pb-10">
+		<section className="bg-white w-full pt-16 sm:pt-20 pb-0">
 			<div className="max-w-[1300px] mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-2 items-center gap-10">
 				{/* TEXTO */}
 				<motion.div

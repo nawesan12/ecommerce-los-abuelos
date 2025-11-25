@@ -22,7 +22,7 @@ export default function Header() {
 		if (
 			pathname.startsWith("/nosotros") ||
 			pathname.startsWith("/contacto") ||
-			pathname.startsWith("/producto") // 👉 Agregado aquí
+			pathname.startsWith("/producto") 
 		) {
 			setSearchOpen(true);
 		} else if (
