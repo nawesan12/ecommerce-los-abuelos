@@ -1,17 +1,7 @@
-import { mockOrders } from "@/src/data/mockOrders";
+"use client";
 
-export interface Order {
-	id: string;
-	fecha: string;
-	estado: string;
-	total: number;
-	items: {
-		img: string;
-		name: string;
-		cantidad: number;
-		precio: number;
-	}[];
-}
+import { mockOrders, type Order } from "@/src/data/mockOrders";
+import { Package, ChevronRight } from "lucide-react";
 
 interface UserOrdersProps {
 	onSelectOrder: (order: Order) => void;
@@ -19,36 +9,61 @@ interface UserOrdersProps {
 
 export default function UserOrders({ onSelectOrder }: UserOrdersProps) {
 	return (
-		<div className="border rounded-xl p-6">
-			<h3 className="text-xl font-bold mb-4">Tus Órdenes</h3>
+		<div className="p-6 border rounded-xl bg-white shadow-sm">
+			<h3 className="text-2xl font-bold mb-6 text-[#0B1D4C]">
+				Tus Órdenes
+			</h3>
 
-			<table className="w-full text-left">
-				<thead>
-					<tr className="border-b">
-						<th>Orden ID</th>
-						<th>Fecha</th>
-						<th>Estado</th>
-						<th>Total</th>
-						<th>Acciones</th>
-					</tr>
-				</thead>
-				<tbody>
+			{mockOrders.length === 0 ? (
+				<div className="py-10 text-center text-gray-500">
+					<Package size={48} className="mx-auto mb-3 text-gray-400" />
+					No tenés órdenes todavía.
+				</div>
+			) : (
+				<div className="grid grid-cols-1 gap-5">
 					{mockOrders.map((order) => (
-						<tr key={order.id} className="border-b">
-							<td>#{order.id}</td>
-							<td>{order.fecha}</td>
-							<td>{order.estado}</td>
-							<td>${order.total}</td>
+						<div
+							key={order.id}
+							className="border rounded-xl p-5 shadow-sm bg-gray-50 hover:shadow-md transition cursor-pointer"
+							onClick={() => onSelectOrder(order)}>
+							<div className="flex items-center justify-between">
+								<div>
+									<p className="font-semibold text-[#0B1D4C] text-lg">
+										Orden #{order.id}
+									</p>
+									<p className="text-sm text-gray-500">
+										{order.fecha}
+									</p>
+								</div>
 
-							<td
-								className="text-[#F32947] cursor-pointer hover:underline"
-								onClick={() => onSelectOrder(order)}>
-								Detalles
-							</td>
-						</tr>
+								<span
+									className={`text-sm font-semibold px-3 py-1 rounded-full ${
+										order.estado === "Entregado"
+											? "bg-green-100 text-green-700"
+											: "bg-yellow-100 text-yellow-700"
+									}`}>
+									{order.estado}
+								</span>
+							</div>
+
+							<div className="mt-4 text-sm text-gray-700 flex items-center justify-between">
+								<p>{order.items.length} artículos</p>
+								<p className="font-semibold text-[#0B1D4C]">
+									Total: $
+									{order.total.toLocaleString("es-AR")}
+								</p>
+							</div>
+
+							<div className="mt-4 flex justify-end">
+								<button className="flex items-center gap-2 text-[#F32947] font-semibold hover:underline">
+									Ver detalles
+									<ChevronRight size={18} />
+								</button>
+							</div>
+						</div>
 					))}
-				</tbody>
-			</table>
+				</div>
+			)}
 		</div>
 	);
 }

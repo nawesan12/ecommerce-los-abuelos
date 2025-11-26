@@ -6,6 +6,7 @@ interface UserData {
     apellido: string;
     email: string;
     telefono: string;
+    dni:string;
 }
 
 interface AuthState {
