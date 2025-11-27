@@ -18,6 +18,10 @@ export default function Header() {
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
+	if (pathname === "/login") {
+		return null;
+	}
+
 	useEffect(() => {
 		if (
 			pathname.startsWith("/nosotros") ||
