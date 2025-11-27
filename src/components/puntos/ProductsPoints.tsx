@@ -6,7 +6,7 @@ import { pointsProducts, CATEGORY_LIMITS } from "./points-data";
 
 export default function ProductsPoints() {
 	// 🔥 Los puntos del usuario vendrán del backend o Zustand más adelante
-	const userPoints = 5000;
+	const userPoints = 1499;
 
 	// Filtrar productos por categoría
 	const bronzeProducts = pointsProducts.filter(
