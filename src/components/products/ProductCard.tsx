@@ -6,7 +6,7 @@ import { Heart } from "lucide-react";
 import { formatCurrency } from "@/lib/currency";
 
 interface ProductCardProps {
-	id: string;
+	id: string | number;
 	title: string;
 	image: string;
 	price: number;

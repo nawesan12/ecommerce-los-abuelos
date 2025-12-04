@@ -47,7 +47,6 @@ export default function ProductCarousel() {
 									title={product.title}
 									image={product.image}
 									price={product.price}
-									href={`/producto/${id}`} // ← AHORA SIEMPRE TIENE HREF
 									variant="carousel"
 								/>
 							</CarouselItem>
