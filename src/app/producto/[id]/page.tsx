@@ -5,13 +5,16 @@ import Link from "next/link";
 import { Heart } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { products } from "@/src/data/products";
+
+// ⛔ Antes: products
+// ✅ Ahora usamos tu mock real del ecommerce
+import { mockProducts } from "@/src/data/mock-products";
 
 export default function ProductPage() {
 	const params = useParams<{ id: string }>();
 	const id = Array.isArray(params.id) ? params.id[0] : params.id;
 
-	const product = products.find((p) => p.id === id);
+	const product = mockProducts.find((p) => p.id === id);
 
 	if (!product) {
 		return (
@@ -19,25 +22,29 @@ export default function ProductPage() {
 				<h1 className="text-2xl font-semibold">
 					Producto no encontrado 😕
 				</h1>
+				<Link
+					href="/productos"
+					className="text-[#F32947] underline mt-3 block">
+					Volver a productos
+				</Link>
 			</div>
 		);
 	}
 
 	const weights = ["7,5 KG", "15 KG", "20 KG"];
-	const [selectedWeight, setSelectedWeight] = useState(
-		product.weight ?? weights[2]
-	);
+	const [selectedWeight, setSelectedWeight] = useState(weights[2]);
 	const [quantity, setQuantity] = useState(1);
 
-	const increment = () => setQuantity((q) => q + 1);
-	const decrement = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
+	const incrementar = () => setQuantity((q) => q + 1);
+	const disminuir = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
 
-	const similares = products.filter((p) => p.id !== product.id).slice(0, 4);
+	// Productos similares (primero evitamos mostrarse a sí mismo)
+	const similares = mockProducts.filter((p) => p.id !== id).slice(0, 4);
 
 	return (
 		<div className="max-w-[1300px] mx-auto px-6 py-12">
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-				{/* Imagen */}
+				{/* Imagen del producto */}
 				<div className="flex justify-center">
 					<div className="relative w-[320px] h-[420px]">
 						<Image
@@ -49,33 +56,24 @@ export default function ProductPage() {
 					</div>
 				</div>
 
-				{/* Info */}
+				{/* Información */}
 				<div>
 					<h1 className="text-[28px] font-bold text-[#0B1D4C] leading-tight">
 						{product.title}{" "}
-						{selectedWeight ? `- ${selectedWeight}` : ""}
+						{selectedWeight && `- ${selectedWeight}`}
 					</h1>
 
 					<p className="text-[26px] font-semibold mt-2">
 						${product.price.toLocaleString("es-AR")}
 					</p>
 
-					<div className="mt-3 text-sm leading-relaxed">
-						<p className="text-green-600 font-semibold">
-							10% de descuento pagando con transferencia
-						</p>
-						<p className="text-red-500 font-semibold">
-							10% OFF comprando 2 o más
-						</p>
-					</div>
-
-					{/* Pesos */}
+					{/* Peso */}
 					<div className="flex gap-3 mt-6">
 						{weights.map((w) => (
 							<button
 								key={w}
 								onClick={() => setSelectedWeight(w)}
-								className={`px-4 py-2 border rounded-lg text-sm transition cursor-pointer ${
+								className={`px-4 py-2 border rounded-lg text-sm ${
 									selectedWeight === w
 										? "border-[#F32947] text-[#F32947] font-semibold"
 										: "border-gray-400 hover:border-[#F32947] hover:text-[#F32947]"
@@ -85,23 +83,23 @@ export default function ProductPage() {
 						))}
 					</div>
 
-					{/* Cantidad */}
+					{/* Cantidad + agregar carrito */}
 					<div className="flex items-center gap-4 mt-8">
 						<div className="flex items-center border rounded-full px-3 select-none">
 							<button
-								onClick={decrement}
-								className="px-3 py-1 text-lg cursor-pointer">
+								onClick={disminuir}
+								className="px-3 py-1 text-lg">
 								-
 							</button>
 							<p className="px-2">{quantity}</p>
 							<button
-								onClick={increment}
-								className="px-3 py-1 text-lg cursor-pointer">
+								onClick={incrementar}
+								className="px-3 py-1 text-lg">
 								+
 							</button>
 						</div>
 
-						<button className="bg-[#F32947] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#d91d3a] transition cursor-pointer">
+						<button className="bg-[#F32947] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#d91d3a] transition">
 							Agregar al carrito
 						</button>
 
@@ -119,11 +117,12 @@ export default function ProductPage() {
 					Descripción
 				</h2>
 				<p className="mt-3 text-gray-700 leading-relaxed max-w-[800px]">
-					{product.description}
+					{product.description ??
+						"Descripción no disponible temporalmente."}
 				</p>
 			</div>
 
-			{/* Productos similares */}
+			{/* SIMILARES */}
 			<div className="mt-16">
 				<h2 className="text-xl font-semibold">Productos Similares</h2>
 
@@ -132,8 +131,8 @@ export default function ProductPage() {
 						<Link
 							key={p.id}
 							href={`/producto/${p.id}`}
-							className="border rounded-xl p-4 hover:shadow-md transition cursor-pointer bg-white">
-							<div className="w-full h-32 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+							className="border rounded-xl p-4 hover:shadow-md transition bg-white cursor-pointer">
+							<div className="w-full h-32 bg-gray-100 rounded-lg flex items-center justify-center">
 								<div className="relative w-[140px] h-[120px]">
 									<Image
 										src={p.image}
@@ -143,7 +142,7 @@ export default function ProductPage() {
 									/>
 								</div>
 							</div>
-							<p className="mt-3 font-medium text-sm line-clamp-2">
+							<p className="font-medium text-sm mt-3">
 								{p.title}
 							</p>
 							<p className="text-xs text-gray-600">
