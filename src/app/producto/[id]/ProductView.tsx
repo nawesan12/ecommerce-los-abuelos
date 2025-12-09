@@ -4,6 +4,14 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heart } from "lucide-react";
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 export default function ProductView({
 	product,
@@ -103,34 +111,57 @@ export default function ProductView({
 
 			{/* Similares */}
 			<div className="mt-16">
-				<h2 className="text-xl font-semibold">Productos Similares</h2>
+				<h2 className="text-xl font-semibold mb-6">
+					Productos Similares
+				</h2>
 
-				<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 mt-6">
-					{similares.map((p) => (
-						<Link
-							key={p.id}
-							href={`/producto/${p.id}`}
-							className="border rounded-xl p-4 hover:shadow-md transition bg-white cursor-pointer">
-							<div className="w-full h-32 bg-gray-100 rounded-lg flex items-center justify-center">
-								<div className="relative w-[140px] h-[120px]">
-									<Image
-										src={p.image}
-										alt={p.title}
-										fill
-										className="object-contain"
+				<Carousel
+					opts={{ loop: true }}
+					className="relative w-full"
+					plugins={[
+						Autoplay({
+							delay: 2500,
+							stopOnMouseEnter: true,
+						}),
+					]}>
+					<CarouselContent className="gap-6">
+						{similares.map((p) => (
+							<CarouselItem
+								key={p.id}
+								className="basis-3/4 sm:basis-1/2 lg:basis-1/3">
+								<Link
+									href={`/producto/${p.id}`}
+									className="border rounded-xl p-4 hover:shadow-md transition bg-white cursor-pointer block">
+									<div className="w-full h-32 bg-gray-100 rounded-lg flex items-center justify-center">
+										<div className="relative w-[140px] h-[120px]">
+											<Image
+												src={p.image}
+												alt={p.title}
+												fill
+												className="object-contain"
+											/>
+										</div>
+									</div>
+
+									<p className="font-medium text-sm mt-3">
+										{p.title}
+									</p>
+									<p className="text-xs text-gray-600">
+										${p.price.toLocaleString("es-AR")}
+									</p>
+
+									<Heart
+										size={18}
+										className="text-[#F32947] mt-1"
 									/>
-								</div>
-							</div>
-							<p className="font-medium text-sm mt-3">
-								{p.title}
-							</p>
-							<p className="text-xs text-gray-600">
-								${p.price.toLocaleString("es-AR")}
-							</p>
-							<Heart size={18} className="text-[#F32947] mt-1" />
-						</Link>
-					))}
-				</div>
+								</Link>
+							</CarouselItem>
+						))}
+					</CarouselContent>
+
+					<CarouselPrevious className="absolute -left-6 top-1/2 -translate-y-1/2 bg-white shadow-md hover:bg-gray-100 text-[#F32947]" />
+					<CarouselNext className="absolute -right-6 top-1/2 -translate-y-1/2 bg-white shadow-md hover:bg-gray-100 text-[#F32947]" />
+				</Carousel>
 			</div>
 		</>
 	);

@@ -6,9 +6,10 @@ import ProductView from "./ProductView";
 export default async function ProductPage({
 	params,
 }: {
-	params: { id: string };
+	params: Promise<{ id: string }>;
 }) {
-	const id = params.id;
+	// ⬅️ IMPORTANTE — AWAIT AQUI
+	const { id } = await params;
 
 	const product = await getProductById(id);
 
