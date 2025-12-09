@@ -12,6 +12,7 @@ import {
 	CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import { useCartStore } from "@/stores/cart-store";
 
 export default function ProductView({
 	product,
@@ -86,7 +87,19 @@ export default function ProductView({
 							</button>
 						</div>
 
-						<button className="bg-[#F32947] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#d91d3a] transition">
+						<button
+							className="bg-[#F32947] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#d91d3a] transition"
+							onClick={() =>
+								useCartStore.getState().addItem(
+									{
+										id: product.id,
+										title: product.title,
+										price: product.price,
+										image: product.image,
+									},
+									quantity
+								)
+							}>
 							Agregar al carrito
 						</button>
 
