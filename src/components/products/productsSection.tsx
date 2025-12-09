@@ -2,7 +2,9 @@
 
 import { useState, useMemo } from "react";
 import ProductCard from "./ProductCard";
-import { mockProducts } from "@/src/data/mock-products";
+import { useEffect } from "react";
+import { getProducts } from "@/lib/products";
+import type { Product } from "@/src/types/product";
 
 export default function ProductsSection() {
 	// ESTADOS DE FILTROS
@@ -12,6 +14,12 @@ export default function ProductsSection() {
 	const [selectedTags, setSelectedTags] = useState<string[]>([]);
 	const [page, setPage] = useState(1);
 	const [sort, setSort] = useState("none");
+
+	const [allProducts, setAllProducts] = useState<Product[]>([]);
+
+	useEffect(() => {
+		getProducts().then(setAllProducts);
+	}, []);
 
 	const ITEMS_PER_PAGE = 12;
 
@@ -37,7 +45,7 @@ export default function ProductsSection() {
 	// FILTRADO DE PRODUCTOS
 
 	const filtered = useMemo(() => {
-		const filtered = mockProducts.filter((p) => {
+		const filtered = allProducts.filter((p) => {
 			const priceOk = p.price <= price;
 
 			const brandOk =
@@ -59,7 +67,7 @@ export default function ProductsSection() {
 		}
 
 		return sorted;
-	}, [price, selectedBrands, selectedTags, sort]);
+	}, [allProducts, price, selectedBrands, selectedTags, sort]);
 
 	// PAGINACIÓN
 
