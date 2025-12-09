@@ -25,7 +25,8 @@ export default function Header() {
 	useEffect(() => {
 		if (
 			pathname.startsWith("/nosotros") ||
-			pathname.startsWith("/contacto")
+			pathname.startsWith("/contacto") ||
+			pathname.startsWith("/producto") 
 		) {
 			setSearchOpen(true);
 		} else if (
@@ -218,27 +219,32 @@ export default function Header() {
 								className="cursor-pointer hover:text-[#F32947] transition"
 							/>
 						)}
-						<IconHeart
-							size={30}
-							stroke={2}
-							className="cursor-pointer hover:text-[#F32947] transition"
-						/>
-						<IconUser
-							size={30}
-							stroke={2}
-							className="cursor-pointer hover:text-[#F32947] transition"
-						/>
-
-						<div className="relative cursor-pointer">
-							<IconShoppingCart
+						<Link href="/liked">
+							<IconHeart
 								size={30}
 								stroke={2}
-								className="hover:text-[#F32947] transition"
+								className="cursor-pointer hover:text-[#F32947] transition"
 							/>
-							<span className="absolute -top-2 -right-2 bg-[#F32947] text-white text-xs font-bold h-4 w-4 flex items-center justify-center rounded-full">
-								1
-							</span>
-						</div>
+						</Link>
+						<Link href="/user">
+							<IconUser
+								size={30}
+								stroke={2}
+								className="cursor-pointer hover:text-[#F32947] transition"
+							/>
+						</Link>
+						<Link href="/carrito">
+							<div className="relative cursor-pointer">
+								<IconShoppingCart
+									size={30}
+									stroke={2}
+									className="hover:text-[#F32947] transition"
+								/>
+								<span className="absolute -top-2 -right-2 bg-[#F32947] text-white text-xs font-bold h-4 w-4 flex items-center justify-center rounded-full">
+									1
+								</span>
+							</div>
+						</Link>
 					</div>
 				</div>
 				<div className="hidden md:block">
@@ -338,6 +344,7 @@ export default function Header() {
 										stroke={2}
 										className="hover:text-[#F32947] transition"
 									/>
+
 									<IconUser
 										size={28}
 										stroke={2}
@@ -345,7 +352,7 @@ export default function Header() {
 									/>
 									<IconShoppingCart
 										size={28}
-										stroke={2}
+										stroke={1}
 										className="hover:text-[#F32947] transition"
 									/>
 								</div>

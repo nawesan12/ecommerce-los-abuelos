@@ -21,8 +21,13 @@ export default function HomePage() {
 	return (
 		<div className="text-center pt-12">
 			<Hero />
+			<CategorySelector />
+
+			<HomeCarousel />
+			<ProductCarousel />
+
 			<h1 className="text-1xl md:text-2xl lg:text-3xl font-extrabold text-[#000000] text-left max-w-[1300px] mx-auto mt-16 px-6">
-				Busca por categoría
+				Filtrar por categoría
 			</h1>
 
 			<section className="px-6 py-16 max-w-[1300px] mx-auto">
@@ -53,7 +58,7 @@ export default function HomePage() {
 							<CarouselItem className="basis-full flex justify-center snap-center">
 								<div className="scale-[1.1]">
 									<CategoryCard
-										title="-"
+										title="Humedos"
 										image="/img/Huella.png"
 										count={42}
 										href="/categoria/accesorios"
@@ -69,19 +74,19 @@ export default function HomePage() {
 				{/* Desktop Grid */}
 				<div className="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
 					<CategoryCard
-						title="-"
+						title="ALIMENTOS SECOS"
 						image="/img/Gato.png"
 						count={84}
 						href="/categoria/comida"
 					/>
 					<CategoryCard
-						title="-"
+						title="ALIMENTOS HUMEDOS"
 						image="/img/Beagle.png"
 						count={16}
 						href="/categoria/higiene"
 					/>
 					<CategoryCard
-						title="-"
+						title="ALIMENTOS ESPECIALES"
 						image="/img/Huella.png"
 						count={42}
 						href="/categoria/accesorios"
@@ -89,14 +94,7 @@ export default function HomePage() {
 				</div>
 			</section>
 
-			<HomeCarousel />
-			<ProductCarousel />
-
-			<CategorySelector />
-
 			<ProductsSection />
-
-			<Footer />
 		</div>
 	);
 }

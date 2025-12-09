@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-export default function HeroPerro() {
+export default function HeroContacto() {
 	return (
 		<section className="bg-white w-full pt-16 sm:pt-20 pb-10">
 			<div className="max-w-[1300px] mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-2 items-center gap-10">
@@ -13,8 +13,8 @@ export default function HeroPerro() {
 					transition={{ duration: 0.7, ease: "easeOut" }}
 					className="text-center md:text-left">
 					<h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight text-[#0B1D4C]">
-						Todo para los{" "}
-						<span className="text-[#F32947]">PICHICHUS!</span>
+						Si los animales hablaran, te contarían sobre{" "}
+						<span className="text-[#F32947]">LOS ABUELOS!</span>
 					</h1>
 
 					<p className="text-gray-600 text-base sm:text-lg mt-4 max-w-md mx-auto md:mx-0">
@@ -37,7 +37,7 @@ export default function HeroPerro() {
 					transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
 					className="flex justify-center md:justify-end">
 					<Image
-						src="/img/HeroPerro.png"
+						src="/img/Dalmata2.png"
 						alt="Perro feliz"
 						width={480}
 						height={480}
