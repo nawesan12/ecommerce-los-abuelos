@@ -21,7 +21,8 @@ export default function Header() {
 	useEffect(() => {
 		if (
 			pathname.startsWith("/nosotros") ||
-			pathname.startsWith("/contacto")
+			pathname.startsWith("/contacto") ||
+			pathname.startsWith("/producto") 
 		) {
 			setSearchOpen(true);
 		} else if (

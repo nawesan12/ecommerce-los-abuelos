@@ -6,22 +6,22 @@ import { Heart } from "lucide-react";
 import { formatCurrency } from "@/lib/currency";
 
 interface ProductCardProps {
-	title?: string;
-	image?: string;
-	price?: number;
-	href?: string;
+	id: string | number;
+	title: string;
+	image: string;
+	price: number;
 	variant?: "default" | "carousel";
 }
 
 export default function ProductCard({
-	title = "Alimento para perro Pedigree Adulto 21KG",
-	image = "/img/11.png",
-	price = 12500,
-	href = "/producto/1",
+	id,
+	title,
+	image,
+	price,
 	variant = "default",
 }: ProductCardProps) {
 	return (
-		<Link href={href}>
+		<Link href={`/producto/${id}`}>
 			<div
 				className={`bg-white rounded-[20px] overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer w-full`}>
 				{/* Imagen */}
@@ -59,7 +59,6 @@ export default function ProductCard({
 						</span>
 					</div>
 
-					{/* Corazón */}
 					<button
 						className="text-[#F32947] hover:scale-110 transition"
 						onClick={(e) => {
