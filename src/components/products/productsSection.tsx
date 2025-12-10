@@ -2,16 +2,24 @@
 
 import { useState, useMemo } from "react";
 import ProductCard from "./ProductCard";
-import { mockProducts } from "@/src/data/mock-products";
+import { useEffect } from "react";
+import { getProducts } from "@/lib/products";
+import type { Product } from "@/src/types/product";
 
 export default function ProductsSection() {
 	// ESTADOS DE FILTROS
 
-	const [price, setPrice] = useState(300000);
+	const [price, setPrice] = useState(100000);
 	const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
 	const [selectedTags, setSelectedTags] = useState<string[]>([]);
 	const [page, setPage] = useState(1);
 	const [sort, setSort] = useState("none");
+
+	const [allProducts, setAllProducts] = useState<Product[]>([]);
+
+	useEffect(() => {
+		getProducts().then(setAllProducts);
+	}, []);
 
 	const ITEMS_PER_PAGE = 12;
 
@@ -37,8 +45,9 @@ export default function ProductsSection() {
 	// FILTRADO DE PRODUCTOS
 
 	const filtered = useMemo(() => {
-		const filtered = mockProducts.filter((p) => {
-			const priceOk = p.price <= price;
+		const filtered = allProducts.filter((p) => {
+			const minPrice = Math.min(...p.variants.map((v) => v.price));
+			const priceOk = minPrice <= price;
 
 			const brandOk =
 				selectedBrands.length === 0 || selectedBrands.includes(p.brand);
@@ -53,13 +62,21 @@ export default function ProductsSection() {
 		let sorted = [...filtered];
 
 		if (sort === "price-asc") {
-			sorted.sort((a, b) => a.price - b.price);
+			sorted.sort((a, b) => {
+				const aMin = Math.min(...a.variants.map((v) => v.price));
+				const bMin = Math.min(...b.variants.map((v) => v.price));
+				return aMin - bMin;
+			});
 		} else if (sort === "price-desc") {
-			sorted.sort((a, b) => b.price - a.price);
+			sorted.sort((a, b) => {
+				const aMin = Math.min(...a.variants.map((v) => v.price));
+				const bMin = Math.min(...b.variants.map((v) => v.price));
+				return bMin - aMin;
+			});
 		}
 
 		return sorted;
-	}, [price, selectedBrands, selectedTags, sort]);
+	}, [allProducts, price, selectedBrands, selectedTags, sort]);
 
 	// PAGINACIÓN
 
@@ -90,7 +107,7 @@ export default function ProductsSection() {
 						<input
 							type="range"
 							min={0}
-							max={300000}
+							max={100000}
 							value={price}
 							onChange={(e) => setPrice(Number(e.target.value))}
 							className="w-full accent-[#F32947]"
@@ -194,10 +211,8 @@ export default function ProductsSection() {
 						{paginated.map((product) => (
 							<ProductCard
 								key={product.id}
-								title={product.title}
-								image={product.image}
-								price={product.price}
-								href={`/producto/${product.id}`}
+								product={product}
+								variant="default"
 							/>
 						))}
 					</div>
