@@ -2,16 +2,24 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export interface CartItem {
-  id: string;
+  id: string;              // ID DE LA VARIANTE
+  productId: string;       // ID DEL PRODUCTO BASE
   title: string;
   price: number;
   image: string;
+  variantWeight?: string;  // peso seleccionado
   quantity: number;
 }
 
 interface CartState {
   items: CartItem[];
-  addItem: (product: Omit<CartItem, "quantity">, quantity?: number) => void;
+
+  // ✔ Ahora también acepta los nuevos campos opcionales
+  addItem: (
+    product: Omit<CartItem, "quantity">,
+    quantity?: number
+  ) => void;
+
   removeItem: (id: string) => void;
   increaseQuantity: (id: string) => void;
   decreaseQuantity: (id: string) => void;

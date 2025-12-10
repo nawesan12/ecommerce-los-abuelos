@@ -202,10 +202,8 @@ export default function ProductsSection() {
 						{paginated.map((product) => (
 							<ProductCard
 								key={product.id}
-								id={product.id}
-								title={product.title}
-								image={product.image}
-								price={product.price}
+								product={product}
+								variant="default"
 							/>
 						))}
 					</div>
