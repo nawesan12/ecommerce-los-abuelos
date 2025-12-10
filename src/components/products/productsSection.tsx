@@ -9,7 +9,7 @@ import type { Product } from "@/src/types/product";
 export default function ProductsSection() {
 	// ESTADOS DE FILTROS
 
-	const [price, setPrice] = useState(300000);
+	const [price, setPrice] = useState(100000);
 	const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
 	const [selectedTags, setSelectedTags] = useState<string[]>([]);
 	const [page, setPage] = useState(1);
@@ -107,7 +107,7 @@ export default function ProductsSection() {
 						<input
 							type="range"
 							min={0}
-							max={300000}
+							max={100000}
 							value={price}
 							onChange={(e) => setPrice(Number(e.target.value))}
 							className="w-full accent-[#F32947]"
