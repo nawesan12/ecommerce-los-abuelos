@@ -20,6 +20,7 @@ import ProductCard from "@/src/components/products/ProductCard";
 import { useCartStore } from "@/stores/cart-store";
 import { mockProducts } from "@/src/data/mock-products";
 
+
 export default function CarritoPage() {
 	const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 
@@ -104,13 +105,7 @@ export default function CarritoPage() {
 						</h2>
 						<div className="grid grid-cols-2 md:grid-cols-4 gap-6">
 							{mockProducts.slice(0, 4).map((p) => (
-								<ProductCard
-									key={p.id}
-									id={p.id}
-									title={p.title}
-									image={p.image}
-									price={p.price}
-								/>
+								<ProductCard key={p.id} product={p} />
 							))}
 						</div>
 					</div>
@@ -121,19 +116,24 @@ export default function CarritoPage() {
 }
 
 function Step1Cart({ items }: { items: any[] }) {
+	const increase = useCartStore((s) => s.increaseQuantity);
+	const decrease = useCartStore((s) => s.decreaseQuantity);
+	const remove = useCartStore((s) => s.removeItem);
+
 	return (
 		<div className="space-y-4">
-			<div className="hidden sm:grid grid-cols-[1fr_120px_100px_40px] gap-4 text-xs font-bold text-gray-500 uppercase tracking-wider border-b pb-2">
+			<div className="hidden sm:grid grid-cols-[1fr_120px_120px_40px] gap-4 text-xs font-bold text-gray-500 uppercase tracking-wider border-b pb-2">
 				<span>Producto</span>
 				<span className="text-center">Cantidad</span>
-				<span className="text-right">Precio</span>
+				<span className="text-right">Subtotal</span>
 				<span></span>
 			</div>
 
 			{items.map((item) => (
 				<div
 					key={item.id}
-					className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col sm:grid sm:grid-cols-[1fr_120px_100px_40px] gap-4 items-center">
+					className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col sm:grid sm:grid-cols-[1fr_120px_120px_40px] gap-4 items-center">
+					{/* Imagen + Info */}
 					<div className="flex items-center gap-4 w-full">
 						<div className="relative w-16 h-16 bg-gray-50 rounded-md flex-shrink-0">
 							<Image
@@ -143,45 +143,50 @@ function Step1Cart({ items }: { items: any[] }) {
 								className="object-contain p-1"
 							/>
 						</div>
+
 						<div>
 							<h3 className="font-semibold text-[#0B1D4C] text-sm leading-tight">
-								{item.title}
+								{item.title.replace(/ - .*/, "")}
 							</h3>
+
+							{item.variantWeight && (
+								<p className="text-xs text-gray-500">
+									Peso:{" "}
+									<span className="font-medium">
+										{item.variantWeight}
+									</span>
+								</p>
+							)}
 						</div>
 					</div>
 
+					{/* Controles de cantidad */}
 					<div className="flex items-center border border-gray-300 rounded-lg h-8 w-fit sm:mx-auto">
 						<button
-							onClick={() =>
-								useCartStore
-									.getState()
-									.decreaseQuantity(item.id)
-							}
+							onClick={() => decrease(item.id)}
 							className="w-8 h-full flex items-center justify-center hover:bg-gray-100 text-gray-600">
 							<Minus size={14} />
 						</button>
+
 						<span className="w-8 text-center text-sm font-medium">
 							{item.quantity}
 						</span>
+
 						<button
-							onClick={() =>
-								useCartStore
-									.getState()
-									.increaseQuantity(item.id)
-							}
+							onClick={() => increase(item.id)}
 							className="w-8 h-full flex items-center justify-center hover:bg-gray-100 text-gray-600">
 							<Plus size={14} />
 						</button>
 					</div>
 
+					{/* Subtotal */}
 					<div className="text-right font-bold text-[#0B1D4C] w-full sm:w-auto">
-						{formatCurrency(item.price)}
+						{formatCurrency(item.price * item.quantity)}
 					</div>
 
+					{/* Eliminar */}
 					<button
-						onClick={() =>
-							useCartStore.getState().removeItem(item.id)
-						}
+						onClick={() => remove(item.id)}
 						className="text-gray-400 hover:text-red-500 transition">
 						<Trash2 size={18} />
 					</button>
@@ -390,77 +395,67 @@ function Step4Payment() {
 
 function OrderSummary({ step, onNext }: { step: number; onNext: () => void }) {
 	const items = useCartStore((state) => state.items);
+
 	const subtotal = items.reduce(
 		(acc, item) => acc + item.price * item.quantity,
 		0
 	);
-	const shipping = subtotal > 0 ? 0 : 0;
-	const total = subtotal + shipping;
 
 	return (
 		<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sticky top-24">
 			<h2 className="font-bold text-lg text-[#0B1D4C] mb-4">Resumen</h2>
 
-			{step > 1 && (
-				<div className="mb-6 space-y-3 border-b pb-4">
-					{useCartStore.getState().items.map((item) => (
-						<div key={item.id} className="flex gap-3">
-							<div className="relative w-10 h-10 bg-gray-50 rounded border overflow-hidden flex-shrink-0">
-								<Image
-									src={item.image}
-									alt="prod"
-									fill
-									className="object-contain"
-								/>
-							</div>
-							<div className="flex-1">
-								<p className="text-xs font-medium line-clamp-2 text-gray-700">
-									{item.title}
-								</p>
-								<p className="text-xs text-gray-500">
-									x{item.quantity}
-								</p>
-							</div>
-							<div className="text-xs font-bold text-[#0B1D4C]">
-								{formatCurrency(item.price)}
-							</div>
+			{step > 1 &&
+				items.map((item) => (
+					<div
+						key={item.id}
+						className="flex gap-3 mb-4 border-b pb-3">
+						<div className="relative w-10 h-10 bg-gray-50 rounded border overflow-hidden flex-shrink-0">
+							<Image
+								src={item.image}
+								alt="prod"
+								fill
+								className="object-contain"
+							/>
 						</div>
-					))}
-				</div>
-			)}
 
-			<div className="space-y-3 text-sm mb-6">
-				<div className="space-y-1">
-					<label className="text-xs font-bold text-gray-500 uppercase">
-						Codigo de descuento
-					</label>
-					<div className="flex gap-2">
-						<Input
-							placeholder="Codigo"
-							className="h-9 bg-gray-50 text-xs"
-						/>
-						<Button
-							variant="outline"
-							className="h-9 text-xs border-[#0B1D4C] text-[#0B1D4C] hover:bg-[#0B1D4C] hover:text-white">
-							APLICAR
-						</Button>
+						<div className="flex-1 text-xs">
+							<p className="font-medium line-clamp-2 text-gray-700">
+								{item.title.replace(/ - .*/, "")}
+							</p>
+
+							{item.variantWeight && (
+								<p className="text-gray-500">
+									Peso: {item.variantWeight}
+								</p>
+							)}
+
+							<p className="text-gray-500">
+								Cantidad: {item.quantity}
+							</p>
+						</div>
+
+						<div className="text-xs font-bold text-[#0B1D4C]">
+							{formatCurrency(item.price * item.quantity)}
+						</div>
 					</div>
-				</div>
+				))}
 
-				<hr className="border-dashed my-4" />
-
+			{/* Totales */}
+			<div className="space-y-3 text-sm mb-6 pt-2">
 				<div className="flex justify-between text-gray-600">
 					<span>Subtotal</span>
 					<span>{formatCurrency(subtotal)}</span>
 				</div>
+
 				<div className="flex justify-between text-gray-600">
-					<span>Envio</span>
+					<span>Envío</span>
 					<span className="text-green-600 font-medium">Gratis</span>
 				</div>
 
 				<div className="flex justify-between text-lg font-extrabold text-[#0B1D4C] pt-2 border-t mt-2">
 					<span>Total</span>
-					<span>{formatCurrency(total)}</span>
+					<span>{formatCurrency(subtotal)}</span>
 				</div>
 			</div>
 
@@ -470,16 +465,6 @@ function OrderSummary({ step, onNext }: { step: number; onNext: () => void }) {
 					className="w-full bg-[#0B1D4C] hover:bg-[#152c69] text-white font-bold h-12 rounded-lg shadow-lg shadow-blue-900/20">
 					FINALIZAR COMPRA
 				</Button>
-			)}
-
-			{step === 1 && (
-				<div className="mt-4 text-center">
-					<Link
-						href="#"
-						className="text-xs font-semibold text-[#0B1D4C] border-b border-[#0B1D4C]">
-						ELEGIR MAS PRODUCTOS
-					</Link>
-				</div>
 			)}
 		</div>
 	);

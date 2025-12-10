@@ -4,6 +4,7 @@ export const mockProducts = [
     title: "Pedigree Adulto",
     image: "/img/11.png",
     brand: "Pedigree",
+    category: "perro",
     tags: ["perro", "económico"],
     description: "Alimento completo para perros adultos.",
     variants: [
@@ -17,6 +18,7 @@ export const mockProducts = [
     title: "Royal Canin Adulto",
     image: "/img/11.png",
     brand: "Royal Canin",
+    category: "perro",
     tags: ["perro", "premium"],
     description: "Nutrición premium para perros adultos.",
     variants: [
@@ -30,6 +32,7 @@ export const mockProducts = [
     title: "Whiskas Gato Adulto",
     image: "/img/11.png",
     brand: "Whiskas",
+    category: "gato",
     tags: ["gato", "económico"],
     description: "Croquetas crujientes para gatos adultos.",
     variants: [
@@ -43,6 +46,7 @@ export const mockProducts = [
     title: "Vitalcan Complete Adulto",
     image: "/img/11.png",
     brand: "Vitalcan",
+    category: "perro",
     tags: ["perro"],
     description: "Fórmula balanceada para perros adultos.",
     variants: [
@@ -56,6 +60,7 @@ export const mockProducts = [
     title: "Vital-Pet Cachorro",
     image: "/img/11.png",
     brand: "Vital-Pet",
+    category: "perro",
     tags: ["perro", "cachorro"],
     description: "Nutrición para cachorros en crecimiento.",
     variants: [
@@ -69,6 +74,7 @@ export const mockProducts = [
     title: "Purina Dog Chow Adulto",
     image: "/img/11.png",
     brand: "Purina",
+    category: "perro",
     tags: ["perro"],
     description: "Alimento confiable para perros adultos.",
     variants: [
@@ -82,6 +88,7 @@ export const mockProducts = [
     title: "Eukanuba Razas Grandes",
     image: "/img/11.png",
     brand: "Eukanuba",
+    category: "perro",
     tags: ["perro", "premium"],
     description: "Fórmula para perros grandes con alta actividad.",
     variants: [
@@ -95,6 +102,7 @@ export const mockProducts = [
     title: "Advance Perro Adulto",
     image: "/img/11.png",
     brand: "Advance",
+    category: "perro",
     tags: ["perro", "premium"],
     description: "Alimento premium para perros activos.",
     variants: [
@@ -108,6 +116,7 @@ export const mockProducts = [
     title: "Royal Canin Indoor Gato",
     image: "/img/11.png",
     brand: "Royal Canin",
+    category: "gato",
     tags: ["gato", "premium"],
     description: "Control de bolas de pelo para gatos indoor.",
     variants: [
@@ -121,6 +130,7 @@ export const mockProducts = [
     title: "Whiskas Gatitos",
     image: "/img/11.png",
     brand: "Whiskas",
+    category: "gato",
     tags: ["gato", "cachorro"],
     description: "Nutrición esencial para gatitos.",
     variants: [
@@ -134,6 +144,7 @@ export const mockProducts = [
     title: "Pedigree Carne y Cereales",
     image: "/img/11.png",
     brand: "Pedigree",
+    category: "perro",
     tags: ["perro"],
     description: "Receta sabrosa para perros adultos.",
     variants: [
@@ -147,6 +158,7 @@ export const mockProducts = [
     title: "Purina Cat Chow Adulto",
     image: "/img/11.png",
     brand: "Purina",
+    category: "gato",
     tags: ["gato"],
     description: "Nutrición con fibras naturales.",
     variants: [
@@ -160,6 +172,7 @@ export const mockProducts = [
     title: "Vitalcan Gato Balanced",
     image: "/img/11.png",
     brand: "Vitalcan",
+    category: "gato",
     tags: ["gato", "económico"],
     description: "Alimento económico y completo.",
     variants: [
@@ -173,6 +186,7 @@ export const mockProducts = [
     title: "Royal Canin Medium Adult",
     image: "/img/11.png",
     brand: "Royal Canin",
+    category: "perro",
     tags: ["perro", "premium"],
     description: "Fórmula para perros medianos.",
     variants: [
@@ -186,6 +200,7 @@ export const mockProducts = [
     title: "Eukanuba Cachorro",
     image: "/img/11.png",
     brand: "Eukanuba",
+    category: "perro",
     tags: ["perro", "cachorro", "premium"],
     description: "Fórmula para crecimiento saludable.",
     variants: [
@@ -199,6 +214,7 @@ export const mockProducts = [
     title: "Purina Pro Plan Adulto",
     image: "/img/11.png",
     brand: "Purina",
+    category: "perro",
     tags: ["perro", "premium"],
     description: "Alta proteína para perros activos.",
     variants: [
@@ -212,6 +228,7 @@ export const mockProducts = [
     title: "Whiskas Pollo Adulto",
     image: "/img/11.png",
     brand: "Whiskas",
+    category: "gato",
     tags: ["gato"],
     description: "Croquetas sabor pollo para gatos adultos.",
     variants: [
@@ -225,6 +242,7 @@ export const mockProducts = [
     title: "Vital-Pet Perro Senior",
     image: "/img/11.png",
     brand: "Vital-Pet",
+    category: "perro",
     tags: ["perro"],
     description: "Nutrición para perros mayores.",
     variants: [
@@ -238,6 +256,7 @@ export const mockProducts = [
     title: "Advance Gato Adulto",
     image: "/img/11.png",
     brand: "Advance",
+    category: "gato",
     tags: ["gato", "premium"],
     description: "Nutrición avanzada para gatos adultos.",
     variants: [
@@ -251,6 +270,7 @@ export const mockProducts = [
     title: "Royal Canin Hairball",
     image: "/img/11.png",
     brand: "Royal Canin",
+    category: "gato",
     tags: ["gato", "premium"],
     description: "Reduce la formación de bolas de pelo.",
     variants: [
@@ -264,6 +284,7 @@ export const mockProducts = [
     title: "Pedigree Pollo Adulto",
     image: "/img/11.png",
     brand: "Pedigree",
+    category: "perro",
     tags: ["perro"],
     description: "Receta de pollo para perros adultos.",
     variants: [
@@ -277,6 +298,7 @@ export const mockProducts = [
     title: "Dog Chow Cachorro",
     image: "/img/11.png",
     brand: "Purina",
+    category: "perro",
     tags: ["perro", "cachorro"],
     description: "Nutrición para cachorros en crecimiento.",
     variants: [
@@ -290,6 +312,7 @@ export const mockProducts = [
     title: "Vitalcan Complete Gato",
     image: "/img/11.png",
     brand: "Vitalcan",
+    category: "gato",
     tags: ["gato"],
     description: "Receta balanceada para gatos.",
     variants: [
@@ -303,6 +326,7 @@ export const mockProducts = [
     title: "Whiskas Carne Adulto",
     image: "/img/11.png",
     brand: "Whiskas",
+    category: "gato",
     tags: ["gato"],
     description: "Sabor carne para gatos adultos.",
     variants: [
@@ -316,6 +340,7 @@ export const mockProducts = [
     title: "Royal Canin Max Adulto",
     image: "/img/11.png",
     brand: "Royal Canin",
+    category: "perro",
     tags: ["perro", "premium"],
     description: "Nutrición avanzada para perros adultos exigentes.",
     variants: [
@@ -329,6 +354,7 @@ export const mockProducts = [
     title: "Eukanuba Razas Pequeñas",
     image: "/img/11.png",
     brand: "Eukanuba",
+    category: "perro",
     tags: ["perro"],
     description: "Optimizado para perros pequeños.",
     variants: [
@@ -342,6 +368,7 @@ export const mockProducts = [
     title: "Advance Control de Peso",
     image: "/img/11.png",
     brand: "Advance",
+    category: "perro",
     tags: ["perro"],
     description: "Para perros con tendencia al sobrepeso.",
     variants: [
@@ -355,6 +382,7 @@ export const mockProducts = [
     title: "Cat Chow Gatitos",
     image: "/img/11.png",
     brand: "Purina",
+    category: "gato",
     tags: ["gato", "cachorro"],
     description: "Fórmula completa para gatitos.",
     variants: [
@@ -368,6 +396,7 @@ export const mockProducts = [
     title: "Vital-Pet Perro Adulto",
     image: "/img/11.png",
     brand: "Vital-Pet",
+    category: "perro",
     tags: ["perro"],
     description: "Económico y balanceado para perros adultos.",
     variants: [
@@ -381,6 +410,7 @@ export const mockProducts = [
     title: "Royal Canin Kitten",
     image: "/img/11.png",
     brand: "Royal Canin",
+    category: "gato",
     tags: ["gato", "premium", "cachorro"],
     description: "Nutrición premium para gatitos.",
     variants: [

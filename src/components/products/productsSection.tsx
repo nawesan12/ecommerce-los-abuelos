@@ -9,7 +9,7 @@ import type { Product } from "@/src/types/product";
 export default function ProductsSection() {
 	// ESTADOS DE FILTROS
 
-	const [price, setPrice] = useState(300000);
+	const [price, setPrice] = useState(100000);
 	const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
 	const [selectedTags, setSelectedTags] = useState<string[]>([]);
 	const [page, setPage] = useState(1);
@@ -46,7 +46,8 @@ export default function ProductsSection() {
 
 	const filtered = useMemo(() => {
 		const filtered = allProducts.filter((p) => {
-			const priceOk = p.price <= price;
+			const minPrice = Math.min(...p.variants.map((v) => v.price));
+			const priceOk = minPrice <= price;
 
 			const brandOk =
 				selectedBrands.length === 0 || selectedBrands.includes(p.brand);
@@ -61,9 +62,17 @@ export default function ProductsSection() {
 		let sorted = [...filtered];
 
 		if (sort === "price-asc") {
-			sorted.sort((a, b) => a.price - b.price);
+			sorted.sort((a, b) => {
+				const aMin = Math.min(...a.variants.map((v) => v.price));
+				const bMin = Math.min(...b.variants.map((v) => v.price));
+				return aMin - bMin;
+			});
 		} else if (sort === "price-desc") {
-			sorted.sort((a, b) => b.price - a.price);
+			sorted.sort((a, b) => {
+				const aMin = Math.min(...a.variants.map((v) => v.price));
+				const bMin = Math.min(...b.variants.map((v) => v.price));
+				return bMin - aMin;
+			});
 		}
 
 		return sorted;
@@ -98,7 +107,7 @@ export default function ProductsSection() {
 						<input
 							type="range"
 							min={0}
-							max={300000}
+							max={100000}
 							value={price}
 							onChange={(e) => setPrice(Number(e.target.value))}
 							className="w-full accent-[#F32947]"
@@ -202,10 +211,8 @@ export default function ProductsSection() {
 						{paginated.map((product) => (
 							<ProductCard
 								key={product.id}
-								id={product.id}
-								title={product.title}
-								image={product.image}
-								price={product.price}
+								product={product}
+								variant="default"
 							/>
 						))}
 					</div>
