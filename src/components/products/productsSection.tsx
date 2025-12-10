@@ -89,7 +89,7 @@ export default function ProductsSection() {
            SIDEBAR DE FILTROS
         ---------------------- */}
 				<aside className="space-y-10">
-					{/* Precio */}
+					{/* Filtrar por Precio */}
 					<div>
 						<h3 className="font-semibold text-gray-800 mb-3 text-sm">
 							Filtrar por Precio
@@ -202,10 +202,10 @@ export default function ProductsSection() {
 						{paginated.map((product) => (
 							<ProductCard
 								key={product.id}
+								id={product.id}
 								title={product.title}
 								image={product.image}
 								price={product.price}
-								href={`/producto/${product.id}`}
 							/>
 						))}
 					</div>

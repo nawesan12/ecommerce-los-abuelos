@@ -23,9 +23,7 @@ export default function ProductCard({
 	return (
 		<Link href={`/producto/${id}`}>
 			<div
-				className={`bg-white rounded-[20px] overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer ${
-					variant === "carousel" ? "w-full" : "w-[170px] sm:w-[190px]"
-				}`}>
+				className={`bg-white rounded-[20px] overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer w-full`}>
 				{/* Imagen */}
 				<div
 					className={`w-full ${
@@ -35,7 +33,7 @@ export default function ProductCard({
 						src={image}
 						alt={title}
 						fill
-						className="object-contain p-6"
+						className="object-contain p-3"
 					/>
 				</div>
 
