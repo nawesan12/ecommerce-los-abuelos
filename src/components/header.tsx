@@ -11,12 +11,17 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import Points from "./points";
 import { motion, AnimatePresence } from "framer-motion";
+import { useCartStore } from "@/stores/cart-store";
 
 export default function Header() {
 	const pathname = usePathname();
 	const [searchOpen, setSearchOpen] = useState(false);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const [touchStartX, setTouchStartX] = useState<number | null>(null);
+
+	const cartCount = useCartStore((state) =>
+		state.items.reduce((acc, item) => acc + item.quantity, 0)
+	);
 
 	if (pathname === "/login") {
 		return null;
@@ -26,7 +31,7 @@ export default function Header() {
 		if (
 			pathname.startsWith("/nosotros") ||
 			pathname.startsWith("/contacto") ||
-			pathname.startsWith("/producto") 
+			pathname.startsWith("/producto")
 		) {
 			setSearchOpen(true);
 		} else if (
@@ -240,9 +245,11 @@ export default function Header() {
 									stroke={2}
 									className="hover:text-[#F32947] transition"
 								/>
-								<span className="absolute -top-2 -right-2 bg-[#F32947] text-white text-xs font-bold h-4 w-4 flex items-center justify-center rounded-full">
-									1
-								</span>
+								{cartCount > 0 && (
+									<span className="absolute -top-2 -right-2 bg-[#F32947] text-white text-xs font-bold h-5 min-w-[20px] px-1 flex items-center justify-center rounded-full animate-pulse">
+										{cartCount}
+									</span>
+								)}
 							</div>
 						</Link>
 					</div>
