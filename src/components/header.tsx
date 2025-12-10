@@ -13,17 +13,12 @@ import { useState, useEffect } from "react";
 import Points from "./points";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore } from "@/stores/cart-store";
-import { useAuth } from "../stores/auth-store"; 
+import { useAuth } from "../stores/auth-store";
 
 export default function Header() {
 	const pathname = usePathname();
 	const router = useRouter();
 	const { user } = useAuth();
-
-	// Ocultar header en login y register
-	if (pathname.startsWith("/login") || pathname.startsWith("/register")) {
-		return null;
-	}
 
 	const [searchOpen, setSearchOpen] = useState(false);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -32,6 +27,10 @@ export default function Header() {
 	const cartCount = useCartStore((state) =>
 		state.items.reduce((acc, item) => acc + item.quantity, 0)
 	);
+
+	if (pathname.startsWith("/login") || pathname.startsWith("/register")) {
+		return null;
+	}
 
 	useEffect(() => {
 		if (
