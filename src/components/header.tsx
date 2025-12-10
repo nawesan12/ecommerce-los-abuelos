@@ -28,10 +28,6 @@ export default function Header() {
 		state.items.reduce((acc, item) => acc + item.quantity, 0)
 	);
 
-	if (pathname.startsWith("/login") || pathname.startsWith("/register")) {
-		return null;
-	}
-
 	useEffect(() => {
 		if (
 			pathname.startsWith("/nosotros") ||
@@ -51,6 +47,13 @@ export default function Header() {
 			setSearchOpen(false);
 		}
 	}, [pathname]);
+
+	const isAuthPage =
+		pathname.startsWith("/login") || pathname.startsWith("/register");
+
+	if (isAuthPage) {
+		return null;
+	}
 
 	const handleTouchStart = (e: React.TouchEvent) => {
 		setTouchStartX(e.touches[0].clientX);
