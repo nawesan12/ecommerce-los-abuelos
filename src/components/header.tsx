@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import {
 	IconSearch,
@@ -7,14 +8,23 @@ import {
 	IconShoppingCart,
 } from "@tabler/icons-react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Points from "./points";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore } from "@/stores/cart-store";
+import { useAuth } from "../stores/auth-store"; 
 
 export default function Header() {
 	const pathname = usePathname();
+	const router = useRouter();
+	const { user } = useAuth();
+
+	// Ocultar header en login y register
+	if (pathname.startsWith("/login") || pathname.startsWith("/register")) {
+		return null;
+	}
+
 	const [searchOpen, setSearchOpen] = useState(false);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const [touchStartX, setTouchStartX] = useState<number | null>(null);
@@ -23,14 +33,13 @@ export default function Header() {
 		state.items.reduce((acc, item) => acc + item.quantity, 0)
 	);
 
-	if (pathname === "/login") {
-		return null;
-	}
-
 	useEffect(() => {
 		if (
 			pathname.startsWith("/nosotros") ||
 			pathname.startsWith("/contacto") ||
+			pathname.startsWith("/user") ||
+			pathname.startsWith("/liked") ||
+			pathname.startsWith("/carrito") ||
 			pathname.startsWith("/producto")
 		) {
 			setSearchOpen(true);
@@ -77,6 +86,7 @@ export default function Header() {
 		<header className="w-full flex justify-center mt-4 relative z-[50]">
 			<div className="flex w-full max-w-[1200px] gap-4 items-center">
 				<div className="bg-[#0B1D4D] w-full h-[95px] rounded-full px-6 md:px-[42px] py-[10px] flex items-center justify-between gap-6 text-white shadow-lg">
+					{/* Logo */}
 					<div className="flex items-center gap-10">
 						<Link href="/">
 							<Image
@@ -89,6 +99,7 @@ export default function Header() {
 						</Link>
 					</div>
 
+					{/* NAV DESKTOP */}
 					<nav className="flex-shrink-0 hidden md:block">
 						<ul className="flex items-center gap-6 text-sm">
 							<li className="flex items-center">
@@ -103,6 +114,7 @@ export default function Header() {
 									Inicio
 								</Link>
 
+								{/* SUBMENÚ (Perro / Gato / Puntos) */}
 								<AnimatePresence>
 									{showSubmenu && (
 										<motion.span
@@ -161,6 +173,7 @@ export default function Header() {
 									Sobre Nosotros
 								</Link>
 							</li>
+
 							<li>
 								<Link
 									href="/contacto"
@@ -175,7 +188,7 @@ export default function Header() {
 						</ul>
 					</nav>
 
-					{/* Search pill */}
+					{/* BARRA DE BÚSQUEDA */}
 					<AnimatePresence>
 						{showSearch && (
 							<motion.div
@@ -197,6 +210,7 @@ export default function Header() {
 						)}
 					</AnimatePresence>
 
+					{/* Menú móvil */}
 					<button
 						className="md:hidden text-white"
 						onClick={() => setMobileMenuOpen(true)}>
@@ -215,6 +229,7 @@ export default function Header() {
 						</svg>
 					</button>
 
+					{/* Íconos */}
 					<div className="hidden md:flex items-center gap-4">
 						{isInicioGroup && !searchOpen && (
 							<IconSearch
@@ -224,6 +239,7 @@ export default function Header() {
 								className="cursor-pointer hover:text-[#F32947] transition"
 							/>
 						)}
+
 						<Link href="/liked">
 							<IconHeart
 								size={30}
@@ -231,13 +247,15 @@ export default function Header() {
 								className="cursor-pointer hover:text-[#F32947] transition"
 							/>
 						</Link>
-						<Link href="/user">
+
+						<Link href={user ? "/user" : "/login"}>
 							<IconUser
 								size={30}
 								stroke={2}
 								className="cursor-pointer hover:text-[#F32947] transition"
 							/>
 						</Link>
+
 						<Link href="/carrito">
 							<div className="relative cursor-pointer">
 								<IconShoppingCart
@@ -245,6 +263,7 @@ export default function Header() {
 									stroke={2}
 									className="hover:text-[#F32947] transition"
 								/>
+
 								{cartCount > 0 && (
 									<span className="absolute -top-2 -right-2 bg-[#F32947] text-white text-xs font-bold h-5 min-w-[20px] px-1 flex items-center justify-center rounded-full animate-pulse">
 										{cartCount}
@@ -254,119 +273,11 @@ export default function Header() {
 						</Link>
 					</div>
 				</div>
+
+				{/* Points */}
 				<div className="hidden md:block">
 					<Points />
 				</div>
-				<AnimatePresence>
-					{mobileMenuOpen && (
-						<motion.div
-							initial={{ opacity: 0 }}
-							animate={{ opacity: 1 }}
-							exit={{ opacity: 0 }}
-							className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm md:hidden"
-							onClick={() => setMobileMenuOpen(false)}
-							onTouchStart={handleTouchStart}
-							onTouchEnd={handleTouchEnd}>
-							<motion.div
-								initial={{ x: "-100%" }}
-								animate={{ x: 0 }}
-								exit={{ x: "-100%" }}
-								transition={{ duration: 0.3, ease: "easeOut" }}
-								className="absolute top-0 left-0 h-full w-[260px] bg-[#0B1D4C] text-white flex flex-col gap-6 p-6 shadow-xl"
-								onClick={(e) => e.stopPropagation()}>
-								<Link
-									href="/"
-									onClick={() => setMobileMenuOpen(false)}
-									className="flex items-center mb-4">
-									<Image
-										src="/img/logo.svg"
-										alt="Los Abuelos"
-										width={120}
-										height={120}
-										className="object-contain"
-									/>
-								</Link>
-								<button
-									className="self-end"
-									onClick={() => setMobileMenuOpen(false)}>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="h-7 w-7"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke="currentColor">
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M6 18L18 6M6 6l12 12"
-										/>
-									</svg>
-								</button>
-
-								<Link
-									href="/"
-									onClick={() => setMobileMenuOpen(false)}
-									className="text-[20px] font-medium">
-									Inicio
-								</Link>
-								<Link
-									href="/perro"
-									onClick={() => setMobileMenuOpen(false)}
-									className="text-[18px]">
-									Perro
-								</Link>
-								<Link
-									href="/gato"
-									onClick={() => setMobileMenuOpen(false)}
-									className="text-[18px]">
-									Gato
-								</Link>
-								<Link
-									href="/puntos"
-									onClick={() => setMobileMenuOpen(false)}
-									className="text-[18px]">
-									Tienda de puntos
-								</Link>
-								<Link
-									href="/nosotros"
-									onClick={() => setMobileMenuOpen(false)}
-									className="text-[20px] font-medium">
-									Sobre Nosotros
-								</Link>
-								<Link
-									href="/contacto"
-									onClick={() => setMobileMenuOpen(false)}
-									className="text-[20px] font-medium">
-									Contacto
-								</Link>
-
-								<div className="mt-2">
-									<Points />
-								</div>
-
-								<div className="flex gap-4 mt-4">
-									<IconHeart
-										size={28}
-										stroke={2}
-										className="hover:text-[#F32947] transition"
-									/>
-
-									<IconUser
-										size={28}
-										stroke={2}
-										className="hover:text-[#F32947] transition"
-									/>
-									<IconShoppingCart
-										size={28}
-										stroke={1}
-										className="hover:text-[#F32947] transition"
-									/>
-								</div>
-							</motion.div>
-						</motion.div>
-					)}
-				</AnimatePresence>
 			</div>
 		</header>
 	);
