@@ -11,6 +11,6 @@ export interface Product {
     brand: string;
     description: string;
     tags: string[];
-    category?: string | null;   
+    category?: string | null;
     variants: ProductVariant[];
 }

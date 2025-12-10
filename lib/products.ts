@@ -2,9 +2,9 @@ import type { Product } from "@/src/types/product";
 import { mockProducts } from "@/src/data/mock-products";
 
 // Transformamos mockProducts para incluir "price" dinámico
-const products: (Product & { price: number })[] = mockProducts.map((p) => ({
-  ...p,
-  price: Math.min(...p.variants.map(v => v.price)), // precio más barato
+export const products: Product[] = mockProducts.map((p) => ({
+    ...p,
+    price: Math.min(...p.variants.map(v => v.price)) // mínimo precio
 }));
 
 // Obtener todos los productos
@@ -27,6 +27,8 @@ export async function searchProducts(query: string) {
     p.tags.some((t) => t.toLowerCase().includes(q))
   );
 }
+
+
 
 // Filtrar por categoría
 export async function getProductsByCategory(category: "perro" | "gato") {

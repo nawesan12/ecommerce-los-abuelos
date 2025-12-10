@@ -46,7 +46,8 @@ export default function ProductsSection() {
 
 	const filtered = useMemo(() => {
 		const filtered = allProducts.filter((p) => {
-			const priceOk = p.price <= price;
+			const minPrice = Math.min(...p.variants.map((v) => v.price));
+			const priceOk = minPrice <= price;
 
 			const brandOk =
 				selectedBrands.length === 0 || selectedBrands.includes(p.brand);
@@ -61,9 +62,17 @@ export default function ProductsSection() {
 		let sorted = [...filtered];
 
 		if (sort === "price-asc") {
-			sorted.sort((a, b) => a.price - b.price);
+			sorted.sort((a, b) => {
+				const aMin = Math.min(...a.variants.map((v) => v.price));
+				const bMin = Math.min(...b.variants.map((v) => v.price));
+				return aMin - bMin;
+			});
 		} else if (sort === "price-desc") {
-			sorted.sort((a, b) => b.price - a.price);
+			sorted.sort((a, b) => {
+				const aMin = Math.min(...a.variants.map((v) => v.price));
+				const bMin = Math.min(...b.variants.map((v) => v.price));
+				return bMin - aMin;
+			});
 		}
 
 		return sorted;

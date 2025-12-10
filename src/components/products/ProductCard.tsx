@@ -15,7 +15,7 @@ export default function ProductCard({
 	product,
 	variant = "default",
 }: ProductCardProps) {
-	if (!product) return null; // ← evita crashes
+	if (!product) return null; 
 
 	const hasVariants =
 		Array.isArray(product.variants) && product.variants.length > 0;

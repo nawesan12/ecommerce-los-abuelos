@@ -20,6 +20,7 @@ import ProductCard from "@/src/components/products/ProductCard";
 import { useCartStore } from "@/stores/cart-store";
 import { mockProducts } from "@/src/data/mock-products";
 
+
 export default function CarritoPage() {
 	const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 
@@ -104,13 +105,7 @@ export default function CarritoPage() {
 						</h2>
 						<div className="grid grid-cols-2 md:grid-cols-4 gap-6">
 							{mockProducts.slice(0, 4).map((p) => (
-								<ProductCard
-									key={p.id}
-									id={p.id}
-									title={p.title}
-									image={p.image}
-									variants={p.variants}
-								/>
+								<ProductCard key={p.id} product={p} />
 							))}
 						</div>
 					</div>
