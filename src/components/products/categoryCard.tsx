@@ -5,7 +5,7 @@ interface CategoryCardProps {
 	title: string;
 	image: string;
 	count: number;
-	onClick?: () => void; // 👈 NUEVO
+	onClick?: () => void; 
 	isActive?: boolean;
 }
 

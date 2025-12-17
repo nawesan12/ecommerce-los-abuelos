@@ -78,7 +78,10 @@ export default function ProductsSection({
 		}
 
 		if (categoryFilter === "especiales") {
-			result = result.filter((p) => p.tags.includes("especial"));
+			result = result.filter(
+				(p) =>
+					p.tags.includes("especial") || p.tags.includes("especiales")
+			);
 		}
 
 		// 🔹 Filtros existentes
