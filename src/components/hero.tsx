@@ -23,13 +23,6 @@ export default function Hero() {
 						Sociis blandit et pellentesque aliquet at quisque tortor
 						lacinia nullam. Mattis aenean scelerisque dui libero.
 					</p>
-
-					<motion.button
-						whileHover={{ scale: 1.05 }}
-						whileTap={{ scale: 0.97 }}
-						className="mt-6 sm:mt-8 px-6 sm:px-8 py-3 sm:py-4 bg-black text-white rounded-xl text-base sm:text-lg font-semibold hover:bg-[#0B1D4C] transition-all w-fit">
-						Compra ya!
-					</motion.button>
 				</motion.div>
 
 				<div className="relative flex justify-center lg:justify-end">

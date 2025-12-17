@@ -6,7 +6,11 @@ import { useEffect } from "react";
 import { getProducts } from "@/lib/products";
 import type { Product } from "@/src/types/product";
 
-export default function ProductsSection() {
+export default function ProductsSection({
+	categoryFilter,
+}: {
+	categoryFilter?: "secos" | "humedos" | "especiales" | null;
+}) {
 	// ESTADOS DE FILTROS
 
 	const [price, setPrice] = useState(100000);
@@ -45,7 +49,27 @@ export default function ProductsSection() {
 	// FILTRADO DE PRODUCTOS
 
 	const filtered = useMemo(() => {
-		const filtered = allProducts.filter((p) => {
+		let result = [...allProducts];
+
+		// 🔹 Filtro por categoría (desde Home)
+		if (categoryFilter === "secos") {
+			result = result.filter(
+				(p) => p.tags.includes("seco") || p.tags.includes("secos")
+			);
+		}
+
+		if (categoryFilter === "humedos") {
+			result = result.filter(
+				(p) => p.tags.includes("humedo") || p.tags.includes("humedos")
+			);
+		}
+
+		if (categoryFilter === "especiales") {
+			result = result.filter((p) => p.tags.includes("especial"));
+		}
+
+		// 🔹 Filtros existentes
+		result = result.filter((p) => {
 			const minPrice = Math.min(...p.variants.map((v) => v.price));
 			const priceOk = minPrice <= price;
 
@@ -59,24 +83,30 @@ export default function ProductsSection() {
 			return priceOk && brandOk && tagOk;
 		});
 
-		let sorted = [...filtered];
-
+		// 🔹 Ordenamiento
 		if (sort === "price-asc") {
-			sorted.sort((a, b) => {
+			result.sort((a, b) => {
 				const aMin = Math.min(...a.variants.map((v) => v.price));
 				const bMin = Math.min(...b.variants.map((v) => v.price));
 				return aMin - bMin;
 			});
 		} else if (sort === "price-desc") {
-			sorted.sort((a, b) => {
+			result.sort((a, b) => {
 				const aMin = Math.min(...a.variants.map((v) => v.price));
 				const bMin = Math.min(...b.variants.map((v) => v.price));
 				return bMin - aMin;
 			});
 		}
 
-		return sorted;
-	}, [allProducts, price, selectedBrands, selectedTags, sort]);
+		return result;
+	}, [
+		allProducts,
+		price,
+		selectedBrands,
+		selectedTags,
+		sort,
+		categoryFilter,
+	]);
 
 	// PAGINACIÓN
 

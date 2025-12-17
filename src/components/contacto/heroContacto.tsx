@@ -21,13 +21,6 @@ export default function HeroContacto() {
 						Alimentos, juguetes y accesorios para que tu mejor amigo
 						sea feliz.
 					</p>
-
-					<motion.button
-						whileHover={{ scale: 1.05 }}
-						whileTap={{ scale: 0.97 }}
-						className="mt-6 px-8 py-3 bg-[#0B1D4C] text-white rounded-xl text-lg font-semibold hover:bg-[#F32947] transition-all">
-						Ver Productos
-					</motion.button>
 				</motion.div>
 
 				{/* IMAGEN */}
