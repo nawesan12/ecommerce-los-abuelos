@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ProductCard from "./ProductCard";
-import { useEffect } from "react";
 import { getProducts } from "@/lib/products";
 import type { Product } from "@/src/types/product";
 
@@ -21,9 +20,23 @@ export default function ProductsSection({
 
 	const [allProducts, setAllProducts] = useState<Product[]>([]);
 
+	const productsTopRef = useRef<HTMLElement | null>(null);
+
 	useEffect(() => {
 		getProducts().then(setAllProducts);
 	}, []);
+
+	useEffect(() => {
+		setPage(1);
+	}, [categoryFilter, price, selectedBrands, selectedTags, sort]);
+
+	useEffect(() => {
+		if (!categoryFilter) return;
+		productsTopRef.current?.scrollIntoView({
+			behavior: "smooth",
+			block: "start",
+		});
+	}, [categoryFilter]);
 
 	const ITEMS_PER_PAGE = 12;
 
@@ -122,7 +135,9 @@ export default function ProductsSection({
 	// UI
 
 	return (
-		<section className="w-full max-w-[1300px] mx-auto px-6 py-16">
+		<section
+			ref={productsTopRef}
+			className="w-full max-w-[1300px] mx-auto px-6 py-16">
 			<div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-12">
 				{/* ---------------------
            SIDEBAR DE FILTROS

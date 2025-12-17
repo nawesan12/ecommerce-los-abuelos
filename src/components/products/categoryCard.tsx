@@ -6,6 +6,7 @@ interface CategoryCardProps {
 	image: string;
 	count: number;
 	onClick?: () => void; // 👈 NUEVO
+	isActive?: boolean;
 }
 
 export default function CategoryCard({
@@ -13,11 +14,17 @@ export default function CategoryCard({
 	image,
 	count,
 	onClick,
+	isActive = false,
 }: CategoryCardProps) {
 	return (
 		<div
 			onClick={onClick}
-			className="group w-full max-w-sm bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-all cursor-pointer">
+			className={`group w-full max-w-sm bg-white rounded-3xl overflow-hidden transition-all cursor-pointer
+      ${
+			isActive
+				? "ring-2 ring-[#F32947] shadow-lg scale-[1.02]"
+				: "shadow-sm hover:shadow-lg"
+		}`}>
 			{/* Imagen */}
 			<div className="w-full h-48 relative overflow-hidden">
 				<Image
@@ -35,7 +42,13 @@ export default function CategoryCard({
 					<p className="text-sm text-gray-600">{count} productos</p>
 				</div>
 
-				<div className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-gray-200 group-hover:border-[#F32947] transition-colors">
+				<div
+					className={`w-8 h-8 flex items-center justify-center rounded-full bg-white border transition-colors
+    ${
+		isActive
+			? "border-[#F32947]"
+			: "border-gray-200 group-hover:border-[#F32947]"
+	}`}>
 					<span className="text-[#F32947] text-lg">→</span>
 				</div>
 			</div>

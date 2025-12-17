@@ -17,12 +17,23 @@ import Footer from "../components/footer";
 import HomeCarousel from "../components/bannerCarousel";
 import CategorySelector from "../components/categorySelector";
 import ProductsSection from "../components/products/productsSection";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function HomePage() {
 	const [selectedCategory, setSelectedCategory] = useState<
 		"secos" | "humedos" | "especiales" | null
 	>(null);
+
+	const productsRef = useRef<HTMLDivElement | null>(null);
+
+	useEffect(() => {
+		if (selectedCategory && productsRef.current) {
+			productsRef.current.scrollIntoView({
+				behavior: "smooth",
+				block: "start",
+			});
+		}
+	}, [selectedCategory]);
 
 	return (
 		<div className="text-center pt-12">
@@ -47,8 +58,13 @@ export default function HomePage() {
 										title="ALIMENTOS SECOS"
 										image="/img/Gato.png"
 										count={84}
+										isActive={selectedCategory === "secos"}
 										onClick={() =>
-											setSelectedCategory("secos")
+											setSelectedCategory((prev) =>
+												prev === "secos"
+													? null
+													: "secos"
+											)
 										}
 									/>
 								</div>
@@ -59,20 +75,15 @@ export default function HomePage() {
 										title="ALIMENTOS HUMEDOS"
 										image="/img/Beagle.png"
 										count={16}
-										onClick={() =>
-											setSelectedCategory("humedos")
+										isActive={
+											selectedCategory === "humedos"
 										}
-									/>
-								</div>
-							</CarouselItem>
-							<CarouselItem className="basis-full flex justify-center snap-center">
-								<div className="scale-[1.1]">
-									<CategoryCard
-										title="ALIMENTOS HUMEDOS"
-										image="/img/Beagle.png"
-										count={16}
 										onClick={() =>
-											setSelectedCategory("humedos")
+											setSelectedCategory((prev) =>
+												prev === "humedos"
+													? null
+													: "humedos"
+											)
 										}
 									/>
 								</div>
@@ -89,24 +100,41 @@ export default function HomePage() {
 						title="ALIMENTOS SECOS"
 						image="/img/Gato.png"
 						count={84}
-						onClick={() => setSelectedCategory("secos")}
+						isActive={selectedCategory === "secos"}
+						onClick={() =>
+							setSelectedCategory((prev) =>
+								prev === "secos" ? null : "secos"
+							)
+						}
 					/>
 					<CategoryCard
 						title="ALIMENTOS HUMEDOS"
 						image="/img/Beagle.png"
 						count={16}
-						onClick={() => setSelectedCategory("humedos")}
+						isActive={selectedCategory === "humedos"}
+						onClick={() =>
+							setSelectedCategory((prev) =>
+								prev === "humedos" ? null : "humedos"
+							)
+						}
 					/>
 					<CategoryCard
 						title="ALIMENTOS ESPECIALES"
 						image="/img/Huella.png"
 						count={42}
-						onClick={() => setSelectedCategory("especiales")}
+						isActive={selectedCategory === "especiales"}
+						onClick={() =>
+							setSelectedCategory((prev) =>
+								prev === "especiales" ? null : "especiales"
+							)
+						}
 					/>
 				</div>
 			</section>
 
-			<ProductsSection categoryFilter={selectedCategory} />
+			<div ref={productsRef}>
+				<ProductsSection categoryFilter={selectedCategory} />
+			</div>
 		</div>
 	);
 }
