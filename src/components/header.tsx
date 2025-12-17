@@ -12,7 +12,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Points from "./points";
 import { motion, AnimatePresence } from "framer-motion";
-import { useCartStore } from "@/stores/cart-store";
+import { useCartStore } from "@/src/stores/cart-store";
 import { useAuth } from "../stores/auth-store";
 
 export default function Header() {

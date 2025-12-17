@@ -12,7 +12,7 @@ import {
 	CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import { useCartStore } from "@/stores/cart-store";
+import { useCartStore } from "@/src/stores/cart-store";
 import { formatCurrency } from "@/lib/currency";
 import { Product, ProductVariant } from "@/src/types/product";
 

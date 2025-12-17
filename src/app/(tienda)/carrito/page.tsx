@@ -17,9 +17,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatCurrency } from "@/lib/currency";
 import ProductCard from "@/src/components/products/ProductCard";
-import { useCartStore } from "@/stores/cart-store";
+import { useCartStore } from "@/src/stores/cart-store";
 import { mockProducts } from "@/src/data/mock-products";
-
 
 export default function CarritoPage() {
 	const [step, setStep] = useState<1 | 2 | 3 | 4>(1);

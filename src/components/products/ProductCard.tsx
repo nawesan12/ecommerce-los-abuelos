@@ -5,6 +5,9 @@ import Link from "next/link";
 import { Heart } from "lucide-react";
 import { formatCurrency } from "@/lib/currency";
 import type { Product } from "@/src/types/product";
+import { useLikedStore } from "@/src/stores/liked-store";
+import { useAuth } from "@/src/stores/auth-store";
+import { useRouter } from "next/navigation";
 
 interface ProductCardProps {
 	product: Product;
@@ -15,7 +18,12 @@ export default function ProductCard({
 	product,
 	variant = "default",
 }: ProductCardProps) {
-	if (!product) return null; 
+	if (!product) return null;
+
+	const { user } = useAuth();
+	const router = useRouter();
+	const { toggleLike, isLiked } = useLikedStore();
+	const liked = isLiked(product.id);
 
 	const hasVariants =
 		Array.isArray(product.variants) && product.variants.length > 0;
@@ -65,8 +73,19 @@ export default function ProductCard({
 					<Heart
 						size={22}
 						strokeWidth={2}
-						className="text-[#F32947] hover:scale-110 transition"
-						onClick={(e) => e.preventDefault()}
+						className={`transition cursor-pointer ${
+							liked
+								? "fill-[#F32947] text-[#F32947]"
+								: "text-[#F32947]"
+						}`}
+						onClick={(e) => {
+							e.preventDefault();
+							if (!user) {
+								router.push("/login");
+								return;
+							}
+							toggleLike(product.id);
+						}}
 					/>
 				</div>
 			</div>
