@@ -13,7 +13,7 @@ export default function Page() {
 			<CatCategories />
 			<BrandsCarousel />
 
-			<ProductsSection />
+			<ProductsSection species="gato" />
 		</>
 	);
 }

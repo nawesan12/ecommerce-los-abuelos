@@ -12,7 +12,7 @@ export default function Page() {
 			<DogCategories />
 			<BrandsCarousel />
 
-			<ProductsSection />
+			<ProductsSection species="perro" />
 		</>
 	);
 }

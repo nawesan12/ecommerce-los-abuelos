@@ -7,8 +7,10 @@ import type { Product } from "@/src/types/product";
 
 export default function ProductsSection({
 	categoryFilter,
+	species,
 }: {
 	categoryFilter?: "secos" | "humedos" | "especiales" | null;
+	species?: "perro" | "gato";
 }) {
 	// ESTADOS DE FILTROS
 
@@ -28,15 +30,15 @@ export default function ProductsSection({
 
 	useEffect(() => {
 		setPage(1);
-	}, [categoryFilter, price, selectedBrands, selectedTags, sort]);
+	}, [categoryFilter, species, price, selectedBrands, selectedTags, sort]);
 
 	useEffect(() => {
-		if (!categoryFilter) return;
+		if (!categoryFilter && !species) return;
 		productsTopRef.current?.scrollIntoView({
 			behavior: "smooth",
 			block: "start",
 		});
-	}, [categoryFilter]);
+	}, [categoryFilter, species]);
 
 	const ITEMS_PER_PAGE = 12;
 
@@ -63,6 +65,10 @@ export default function ProductsSection({
 
 	const filtered = useMemo(() => {
 		let result = [...allProducts];
+
+		if (species) {
+			result = result.filter((p) => p.category === species);
+		}
 
 		// 🔹 Filtro por categoría (desde Home)
 		if (categoryFilter === "secos") {
@@ -122,6 +128,7 @@ export default function ProductsSection({
 		selectedTags,
 		sort,
 		categoryFilter,
+		species,
 	]);
 
 	// PAGINACIÓN
