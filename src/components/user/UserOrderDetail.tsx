@@ -1,5 +1,8 @@
 "use client";
 
+import { toast } from "sonner";
+import { useCartStore } from "@/src/stores/cart-store";
+
 interface OrderItem {
 	img: string;
 	name: string;
@@ -22,6 +25,25 @@ export default function UserOrderDetail({
 	order: Order;
 	onClose: () => void;
 }) {
+	const addItem = useCartStore((s) => s.addItem);
+
+	const handleReorder = () => {
+		order.items.forEach((item, idx) => {
+			addItem(
+				{
+					id: `${order.id}-${idx}`, // ID ficticio de variante
+					productId: order.id,
+					title: item.name,
+					price: item.precio,
+					image: item.img,
+				},
+				item.cantidad
+			);
+		});
+
+		toast.success("Productos agregados al carrito 🛒");
+	};
+
 	return (
 		<div className="border rounded-xl p-6 bg-white shadow-md">
 			<h3 className="text-xl font-bold mb-6">Detalles de la Orden</h3>
@@ -53,7 +75,7 @@ export default function UserOrderDetail({
 			</button>
 
 			<button
-				onClick={() => alert("Función pendiente: mandar al carrito")}
+				onClick={handleReorder}
 				className="mt-6 w-full bg-[#F32947] text-white py-3 rounded-lg font-semibold hover:bg-[#d91d3a] transition">
 				Volver a comprar
 			</button>

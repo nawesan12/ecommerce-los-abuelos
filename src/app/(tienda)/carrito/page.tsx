@@ -19,6 +19,7 @@ import { formatCurrency } from "@/lib/currency";
 import ProductCard from "@/src/components/products/ProductCard";
 import { useCartStore } from "@/src/stores/cart-store";
 import { mockProducts } from "@/src/data/mock-products";
+import { toast } from "sonner";
 
 export default function CarritoPage() {
 	const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
@@ -118,6 +119,7 @@ function Step1Cart({ items }: { items: any[] }) {
 	const increase = useCartStore((s) => s.increaseQuantity);
 	const decrease = useCartStore((s) => s.decreaseQuantity);
 	const remove = useCartStore((s) => s.removeItem);
+	const clearCart = useCartStore((s) => s.clear);
 
 	return (
 		<div className="space-y-4">
@@ -185,7 +187,10 @@ function Step1Cart({ items }: { items: any[] }) {
 
 					{/* Eliminar */}
 					<button
-						onClick={() => remove(item.id)}
+						onClick={() => {
+							remove(item.id);
+							toast.success("Producto eliminado del carrito");
+						}}
 						className="text-gray-400 hover:text-red-500 transition">
 						<Trash2 size={18} />
 					</button>

@@ -4,6 +4,7 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import Image from "next/image";
 import { mockPets, type Pet } from "@/src/data/mockPets";
 import { Plus, X } from "lucide-react";
+import { toast } from "sonner";
 
 export default function UserPets() {
 	const [pets, setPets] = useState<Pet[]>(mockPets);
@@ -57,6 +58,7 @@ export default function UserPets() {
 		};
 
 		setPets((prev) => [...prev, newPet]);
+		toast.success("Mascota agregada correctamente 🐾");
 		closeModal();
 	};
 
@@ -237,6 +239,7 @@ export default function UserPets() {
 											(p) => p.id !== petToDelete.id
 										)
 									);
+									toast.success("Mascota eliminada");
 									setPetToDelete(null);
 								}}
 								className="px-4 py-2 text-sm rounded-lg bg-red-600 text-white hover:bg-red-700">
