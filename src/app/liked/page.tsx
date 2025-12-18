@@ -1,10 +1,11 @@
 "use client";
 import HeroFavoritos from "@/src/components/liked/HeroFavoritos";
-import { useLikedStore } from "@/src/stores/liked-store"; 
+import { useLikedStore } from "@/src/stores/liked-store";
 import { getProducts } from "@/lib/products";
 import { useEffect, useState } from "react";
 import type { Product } from "@/src/types/product";
 import ProductCard from "@/src/components/products/ProductCard";
+import { toast } from "sonner";
 
 export default function LikedPage() {
 	const { likedIds } = useLikedStore();
@@ -14,6 +15,12 @@ export default function LikedPage() {
 		getProducts().then((all) => {
 			setProducts(all.filter((p) => likedIds.includes(p.id)));
 		});
+	}, [likedIds]);
+
+	useEffect(() => {
+		if (likedIds.length === 0) {
+			toast.info("Todavía no agregaste productos a favoritos ❤️");
+		}
 	}, [likedIds]);
 
 	return (

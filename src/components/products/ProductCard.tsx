@@ -8,6 +8,7 @@ import type { Product } from "@/src/types/product";
 import { useLikedStore } from "@/src/stores/liked-store";
 import { useAuth } from "@/src/stores/auth-store";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface ProductCardProps {
 	product: Product;
@@ -80,11 +81,24 @@ export default function ProductCard({
 						}`}
 						onClick={(e) => {
 							e.preventDefault();
+
 							if (!user) {
+								toast.info(
+									"Iniciá sesión para guardar favoritos ❤️"
+								);
 								router.push("/login");
 								return;
 							}
+
 							toggleLike(product.id);
+
+							if (!liked) {
+								toast.success(
+									"Producto agregado a favoritos ❤️"
+								);
+							} else {
+								toast("Producto eliminado de favoritos 💔");
+							}
 						}}
 					/>
 				</div>

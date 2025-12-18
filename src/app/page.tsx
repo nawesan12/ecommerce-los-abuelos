@@ -18,6 +18,7 @@ import HomeCarousel from "../components/bannerCarousel";
 import CategorySelector from "../components/categorySelector";
 import ProductsSection from "../components/products/productsSection";
 import { useState, useRef, useEffect } from "react";
+import { toast } from "sonner";
 
 export default function HomePage() {
 	const [selectedCategory, setSelectedCategory] = useState<
@@ -39,6 +40,8 @@ export default function HomePage() {
 		<div className="text-center pt-12">
 			<Hero />
 			<CategorySelector />
+
+			
 
 			<HomeCarousel />
 			<ProductCarousel />
