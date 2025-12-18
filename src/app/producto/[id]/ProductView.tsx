@@ -15,6 +15,8 @@ import Autoplay from "embla-carousel-autoplay";
 import { useCartStore } from "@/src/stores/cart-store";
 import { formatCurrency } from "@/lib/currency";
 import { Product, ProductVariant } from "@/src/types/product";
+import { toast } from "sonner";
+import { useAuth } from "@/src/stores/auth-store";
 
 export default function ProductView({
 	product,
@@ -28,8 +30,22 @@ export default function ProductView({
 	);
 	const [quantity, setQuantity] = useState(1);
 
-	const incrementar = () => setQuantity((q) => q + 1);
-	const disminuir = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
+	const { user } = useAuth();
+
+	const incrementar = () => {
+		setQuantity((q) => q + 1);
+		toast("Cantidad aumentada");
+	};
+
+	const disminuir = () => {
+		setQuantity((q) => {
+			if (q > 1) {
+				toast("Cantidad reducida");
+				return q - 1;
+			}
+			return 1;
+		});
+	};
 
 	const priceToShow = selectedVariant
 		? selectedVariant.price
@@ -98,7 +114,15 @@ export default function ProductView({
 						<button
 							className="bg-[#F32947] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#d91d3a] transition"
 							onClick={() => {
-								if (!selectedVariant) return;
+								if (!user) {
+									toast.info("Iniciá sesión para agregar productos 🛒");
+									return;
+								}
+
+								if (!selectedVariant) {
+									toast.error("Seleccioná una variante");
+									return;
+								}
 
 								useCartStore.getState().addItem(
 									{
@@ -106,14 +130,13 @@ export default function ProductView({
 										title: `${product.title} - ${selectedVariant.weight}`,
 										price: selectedVariant.price,
 										image: product.image,
-
-										// estos dos campos todavía no existen en el carrito,
-										// pero no rompen nada, los agregaremos después.
 										variantWeight: selectedVariant.weight,
 										productId: product.id,
 									},
 									quantity
 								);
+
+								toast.success("Producto agregado al carrito 🛒");
 							}}>
 							Agregar al carrito
 						</button>
@@ -121,6 +144,7 @@ export default function ProductView({
 						<Heart
 							size={26}
 							className="cursor-pointer text-[#F32947] hover:scale-110 transition"
+							
 						/>
 					</div>
 				</div>
