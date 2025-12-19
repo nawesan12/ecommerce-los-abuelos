@@ -114,11 +114,6 @@ export default function ProductView({
 						<button
 							className="bg-[#F32947] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#d91d3a] transition"
 							onClick={() => {
-								if (!user) {
-									toast.info("Iniciá sesión para agregar productos 🛒");
-									return;
-								}
-
 								if (!selectedVariant) {
 									toast.error("Seleccioná una variante");
 									return;
@@ -136,7 +131,9 @@ export default function ProductView({
 									quantity
 								);
 
-								toast.success("Producto agregado al carrito 🛒");
+								toast.success(
+									"Producto agregado al carrito 🛒"
+								);
 							}}>
 							Agregar al carrito
 						</button>
@@ -144,7 +141,6 @@ export default function ProductView({
 						<Heart
 							size={26}
 							className="cursor-pointer text-[#F32947] hover:scale-110 transition"
-							
 						/>
 					</div>
 				</div>

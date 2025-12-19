@@ -33,6 +33,38 @@ export default function CarritoPage() {
 
 	const cartItems = useCartStore((state) => state.items);
 
+	async function handleCheckout(cartItems: any[]) {
+		try {
+			const res = await fetch("/api/mercadopago/create-preference", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					payer: {
+						email: "test_user@test.com",
+					},
+					items: cartItems.map((item) => ({
+						title: item.title,
+						price: item.price,
+						quantity: item.quantity,
+					})),
+				}),
+			});
+
+			const data = await res.json();
+
+			if (!data.init_point) {
+				throw new Error("No se pudo generar la preferencia");
+			}
+
+			window.location.href = data.init_point;
+		} catch (error) {
+			console.error(error);
+			toast.error("Error al iniciar el pago con Mercado Pago");
+		}
+	}
+
 	return (
 		<div className="min-h-screen bg-gray-50 py-10">
 			<div className="max-w-[1300px] mx-auto px-6">
@@ -76,7 +108,7 @@ export default function CarritoPage() {
 											? setStep(
 													(prev) => (prev + 1) as any
 											  )
-											: alert("prueba")
+											: handleCheckout(cartItems)
 									}>
 									{step === 4
 										? "Finalizar Compra"
