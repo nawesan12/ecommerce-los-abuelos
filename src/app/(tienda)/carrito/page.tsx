@@ -42,7 +42,7 @@ export default function CarritoPage() {
 				},
 				body: JSON.stringify({
 					payer: {
-						email: "test_user@test.com",
+						email: "test_user_351831898137148704@testuser.com",
 					},
 					items: cartItems.map((item) => ({
 						title: item.title,
@@ -54,11 +54,11 @@ export default function CarritoPage() {
 
 			const data = await res.json();
 
-			if (!data.init_point) {
+			if (!data.sandbox_init_point) {
 				throw new Error("No se pudo generar la preferencia");
 			}
 
-			window.location.href = data.init_point;
+			window.location.href = data.sandbox_init_point;
 		} catch (error) {
 			console.error(error);
 			toast.error("Error al iniciar el pago con Mercado Pago");
@@ -363,68 +363,14 @@ function Step3Shipping() {
 
 function Step4Payment() {
 	return (
-		<div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
-			<div className="flex items-center gap-2 mb-4 text-[#F32947] font-semibold border-b pb-2">
-				<CreditCard size={20} /> <span>Datos de Pago</span>
-			</div>
-
-			<div className="space-y-4">
-				<div className="p-4 border rounded-xl bg-blue-50 border-blue-200 flex gap-3">
-					<div className="mt-1">
-						<Check className="text-blue-600 w-4 h-4" />
-					</div>
-					<div>
-						<p className="text-sm font-semibold text-blue-800">
-							Tarjeta de Credito / Debito
-						</p>
-						<p className="text-xs text-blue-600">
-							Transacciones seguras y encriptadas.
-						</p>
-					</div>
-				</div>
-
-				<div className="space-y-2">
-					<label className="text-xs font-bold text-gray-700 uppercase">
-						Numero de Tarjeta
-					</label>
-					<Input
-						placeholder="0000 0000 0000 0000"
-						className="bg-gray-50 border-gray-200"
-					/>
-				</div>
-
-				<div className="grid grid-cols-2 gap-4">
-					<div className="space-y-2">
-						<label className="text-xs font-bold text-gray-700 uppercase">
-							Vencimiento
-						</label>
-						<Input
-							placeholder="MM/AA"
-							className="bg-gray-50 border-gray-200"
-						/>
-					</div>
-					<div className="space-y-2">
-						<label className="text-xs font-bold text-gray-700 uppercase">
-							CVC
-						</label>
-						<Input
-							placeholder="123"
-							type="password"
-							className="bg-gray-50 border-gray-200"
-						/>
-					</div>
-				</div>
-
-				<div className="space-y-2">
-					<label className="text-xs font-bold text-gray-700 uppercase">
-						Nombre del Titular
-					</label>
-					<Input
-						placeholder="Como figura en la tarjeta"
-						className="bg-gray-50 border-gray-200"
-					/>
-				</div>
-			</div>
+		<div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
+			<h3 className="text-lg font-bold text-[#0B1D4C] mb-2">
+				Pago con Mercado Pago
+			</h3>
+			<p className="text-sm text-gray-600">
+				Al finalizar la compra, serás redirigido a Mercado Pago para
+				completar el pago de forma segura.
+			</p>
 		</div>
 	);
 }
@@ -505,3 +451,71 @@ function OrderSummary({ step, onNext }: { step: number; onNext: () => void }) {
 		</div>
 	);
 }
+
+// function Step4Payment() {
+// 	return (
+// 		<div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+// 			<div className="flex items-center gap-2 mb-4 text-[#F32947] font-semibold border-b pb-2">
+// 				<CreditCard size={20} /> <span>Datos de Pago</span>
+// 			</div>
+
+// 			<div className="space-y-4">
+// 				<div className="p-4 border rounded-xl bg-blue-50 border-blue-200 flex gap-3">
+// 					<div className="mt-1">
+// 						<Check className="text-blue-600 w-4 h-4" />
+// 					</div>
+// 					<div>
+// 						<p className="text-sm font-semibold text-blue-800">
+// 							Tarjeta de Credito / Debito
+// 						</p>
+// 						<p className="text-xs text-blue-600">
+// 							Transacciones seguras y encriptadas.
+// 						</p>
+// 					</div>
+// 				</div>
+
+// 				<div className="space-y-2">
+// 					<label className="text-xs font-bold text-gray-700 uppercase">
+// 						Numero de Tarjeta
+// 					</label>
+// 					<Input
+// 						placeholder="0000 0000 0000 0000"
+// 						className="bg-gray-50 border-gray-200"
+// 					/>
+// 				</div>
+
+// 				<div className="grid grid-cols-2 gap-4">
+// 					<div className="space-y-2">
+// 						<label className="text-xs font-bold text-gray-700 uppercase">
+// 							Vencimiento
+// 						</label>
+// 						<Input
+// 							placeholder="MM/AA"
+// 							className="bg-gray-50 border-gray-200"
+// 						/>
+// 					</div>
+// 					<div className="space-y-2">
+// 						<label className="text-xs font-bold text-gray-700 uppercase">
+// 							CVC
+// 						</label>
+// 						<Input
+// 							placeholder="123"
+// 							type="password"
+// 							className="bg-gray-50 border-gray-200"
+// 						/>
+// 					</div>
+// 				</div>
+
+// 				<div className="space-y-2">
+// 					<label className="text-xs font-bold text-gray-700 uppercase">
+// 						Nombre del Titular
+// 					</label>
+// 					<Input
+// 						placeholder="Como figura en la tarjeta"
+// 						className="bg-gray-50 border-gray-200"
+// 					/>
+// 				</div>
+// 			</div>
+// 		</div>
+// 	);
+// }

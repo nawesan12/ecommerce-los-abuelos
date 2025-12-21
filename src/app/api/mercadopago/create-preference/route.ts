@@ -39,7 +39,7 @@ export async function POST(req: Request) {
         failure: "http://localhost:3000/pago/failure",
         pending: "http://localhost:3000/pago/pending",
       },
-
+      auto_return: "approved",
       
     };
 
