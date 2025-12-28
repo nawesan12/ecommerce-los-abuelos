@@ -8,25 +8,39 @@ import {
 	IconShoppingCart,
 } from "@tabler/icons-react";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import Points from "./points";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore } from "@/src/stores/cart-store";
 import { useAuth } from "../stores/auth-store";
+import { searchProducts } from "@/lib/products";
+import type { Product } from "@/src/types/product";
+import { formatCurrency } from "@/lib/currency";
 
 export default function Header() {
 	const pathname = usePathname();
 	const router = useRouter();
+	const searchParams = useSearchParams();
 	const { user } = useAuth();
 
 	const [searchOpen, setSearchOpen] = useState(false);
+	const [searchTerm, setSearchTerm] = useState("");
+	const [suggestions, setSuggestions] = useState<Product[]>([]);
+	const [loading, setLoading] = useState(false);
+	const [showDropdown, setShowDropdown] = useState(false);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const [touchStartX, setTouchStartX] = useState<number | null>(null);
+	const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
 	const cartCount = useCartStore((state) =>
 		state.items.reduce((acc, item) => acc + item.quantity, 0)
 	);
+
+	useEffect(() => {
+		const currentQuery = searchParams.get("q") || "";
+		setSearchTerm(currentQuery);
+	}, [searchParams]);
 
 	useEffect(() => {
 		if (
@@ -54,6 +68,39 @@ export default function Header() {
 	if (isAuthPage) {
 		return null;
 	}
+
+	const handleSearchChange = (value: string) => {
+		setSearchTerm(value);
+
+		if (debounceRef.current) clearTimeout(debounceRef.current);
+
+		if (!value.trim()) {
+			setSuggestions([]);
+			setShowDropdown(false);
+			return;
+		}
+
+		debounceRef.current = setTimeout(async () => {
+			setLoading(true);
+			const results = await searchProducts(value);
+			setSuggestions(results.slice(0, 6));
+			setShowDropdown(true);
+			setLoading(false);
+		}, 250);
+	};
+
+	const handleSearch = (e?: React.FormEvent<HTMLFormElement>) => {
+		e?.preventDefault();
+
+		const query = searchTerm.trim();
+		const target = query
+			? `/producto/listados?q=${encodeURIComponent(query)}`
+			: "/producto/listados";
+
+		router.push(target);
+		setSearchOpen(true);
+		setShowDropdown(false);
+	};
 
 	const handleTouchStart = (e: React.TouchEvent) => {
 		setTouchStartX(e.touches[0].clientX);
@@ -193,22 +240,95 @@ export default function Header() {
 					{/* BARRA DE BÚSQUEDA */}
 					<AnimatePresence>
 						{showSearch && (
-							<motion.div
+							<motion.form
 								key="searchbar"
 								initial={{ opacity: 0, y: -4 }}
 								animate={{ opacity: 1, y: 0 }}
 								exit={{ opacity: 0, y: -4 }}
 								transition={{ duration: 0.5, ease: "easeOut" }}
-								className="hidden md:flex items-center bg-white rounded-full pl-5 pr-2 py-2 w-[330px]">
+								onSubmit={handleSearch}
+								className="hidden md:flex items-center bg-white rounded-full pl-5 pr-2 py-2 w-[330px] relative">
 								<input
 									className="flex-1 bg-transparent outline-none text-[#0B1D4D] placeholder:text-gray-400"
 									placeholder="Buscar Productos..."
 									onFocus={() => setSearchOpen(true)}
+									value={searchTerm}
+									onChange={(e) =>
+										handleSearchChange(e.target.value)
+									}
+									onBlur={() =>
+										setTimeout(() => setShowDropdown(false), 120)
+									}
+									onFocusCapture={() => {
+										if (suggestions.length > 0) {
+											setShowDropdown(true);
+										}
+									}}
 								/>
-								<span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#0B1D4D] text-white">
+								<button
+									type="submit"
+									className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#0B1D4D] text-white hover:bg-[#17326f] transition">
 									<IconSearch size={18} stroke={2} />
-								</span>
-							</motion.div>
+								</button>
+
+								{/* Dropdown de sugerencias */}
+								{showDropdown && (
+									<div className="absolute left-0 top-[110%] w-full bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
+										{loading && (
+											<p className="px-4 py-3 text-sm text-gray-500">
+												Buscando...
+											</p>
+										)}
+
+										{!loading && suggestions.length === 0 && (
+											<p className="px-4 py-3 text-sm text-gray-500">
+												Sin resultados
+											</p>
+										)}
+
+										{suggestions.map((prod) => (
+											<button
+												key={prod.id}
+												type="button"
+												onMouseDown={(e) => e.preventDefault()}
+												onClick={() => {
+													router.push(`/producto/${prod.id}`);
+													setShowDropdown(false);
+												}}
+												className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-left">
+												<div className="relative w-10 h-10 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+													<Image
+														src={prod.image}
+														alt={prod.title}
+														fill
+														className="object-contain p-1"
+													/>
+												</div>
+												<div className="flex-1">
+													<p className="text-sm font-medium text-gray-800 line-clamp-1">
+														{prod.title}
+													</p>
+													<p className="text-xs text-gray-500">
+														{formatCurrency(
+															Math.min(...prod.variants.map((v) => v.price))
+														)}
+													</p>
+												</div>
+											</button>
+										))}
+
+										{searchTerm.trim() && (
+											<button
+												type="button"
+												onMouseDown={(e) => e.preventDefault()}
+												onClick={() => handleSearch()}
+												className="w-full text-sm font-semibold text-[#0B1D4C] px-4 py-3 border-t hover:bg-gray-50">
+												Ver todos los resultados para "{searchTerm}"
+											</button>
+										)}
+									</div>
+								)}
+							</motion.form>
 						)}
 					</AnimatePresence>
 

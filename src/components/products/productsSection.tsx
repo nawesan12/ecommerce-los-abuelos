@@ -8,9 +8,11 @@ import type { Product } from "@/src/types/product";
 export default function ProductsSection({
 	categoryFilter,
 	species,
+	searchQuery,
 }: {
 	categoryFilter?: "secos" | "humedos" | "especiales" | null;
 	species?: "perro" | "gato";
+	searchQuery?: string;
 }) {
 	// ESTADOS DE FILTROS
 
@@ -30,7 +32,15 @@ export default function ProductsSection({
 
 	useEffect(() => {
 		setPage(1);
-	}, [categoryFilter, species, price, selectedBrands, selectedTags, sort]);
+	}, [
+		categoryFilter,
+		species,
+		price,
+		selectedBrands,
+		selectedTags,
+		sort,
+		searchQuery,
+	]);
 
 	useEffect(() => {
 		if (!categoryFilter && !species) return;
@@ -66,6 +76,35 @@ export default function ProductsSection({
 	const filtered = useMemo(() => {
 		let result = [...allProducts];
 
+		const tokens =
+			searchQuery
+				?.trim()
+				.toLowerCase()
+				.split(/\s+/)
+				.filter(Boolean) ?? [];
+
+		const matchesSearch = (p: Product) => {
+			if (tokens.length === 0) return true;
+
+			return tokens.every((token) => {
+				const inTitle = p.title.toLowerCase().includes(token);
+				const inBrand = p.brand.toLowerCase().includes(token);
+				const inDescription = p.description
+					?.toLowerCase()
+					.includes(token);
+				const inTags = p.tags.some((t) =>
+					t.toLowerCase().includes(token)
+				);
+				const inVariants = p.variants.some((v) =>
+					v.weight.toLowerCase().includes(token)
+				);
+
+				return (
+					inTitle || inBrand || inDescription || inTags || inVariants
+				);
+			});
+		};
+
 		if (species) {
 			result = result.filter((p) => p.category === species);
 		}
@@ -89,6 +128,9 @@ export default function ProductsSection({
 					p.tags.includes("especial") || p.tags.includes("especiales")
 			);
 		}
+
+		// 🔹 Búsqueda por texto (todas las palabras deben coincidir en algún campo)
+		result = result.filter(matchesSearch);
 
 		// 🔹 Filtros existentes
 		result = result.filter((p) => {
@@ -129,6 +171,7 @@ export default function ProductsSection({
 		sort,
 		categoryFilter,
 		species,
+		searchQuery,
 	]);
 
 	// PAGINACIÓN
@@ -138,6 +181,8 @@ export default function ProductsSection({
 		(page - 1) * ITEMS_PER_PAGE,
 		page * ITEMS_PER_PAGE
 	);
+	const hasSearch = !!searchQuery?.trim();
+	const fallbackProducts = !hasSearch ? [] : allProducts.slice(0, 8);
 
 	const nextPage = () => page < totalPages && setPage(page + 1);
 	const prevPage = () => page > 1 && setPage(page - 1);
@@ -246,7 +291,11 @@ export default function ProductsSection({
 				{/*LISTA DE PRODUCTOS */}
 				<div className="space-y-10">
 					<div className="flex justify-between items-center text-sm text-gray-600">
-						<p>Mostrando {paginated.length} resultados</p>
+						<p>
+							{hasSearch
+								? `Mostrando ${filtered.length} resultados para "${searchQuery}"`
+								: `Mostrando ${paginated.length} resultados`}
+						</p>
 
 						<select
 							value={sort}
@@ -262,15 +311,41 @@ export default function ProductsSection({
 						</select>
 					</div>
 
-					<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-						{paginated.map((product) => (
-							<ProductCard
-								key={product.id}
-								product={product}
-								variant="default"
-							/>
-						))}
-					</div>
+					{hasSearch && filtered.length === 0 ? (
+						<div className="space-y-6">
+							<p className="text-gray-700 font-semibold">
+								El resultado de la búsqueda de "{searchQuery}"
+								{" "}no fue encontrado.
+							</p>
+
+							{fallbackProducts.length > 0 && (
+								<>
+									<p className="text-sm text-gray-500">
+										Quizás te interesen estos productos:
+									</p>
+									<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+										{fallbackProducts.map((product) => (
+											<ProductCard
+												key={product.id}
+												product={product}
+												variant="default"
+											/>
+										))}
+									</div>
+								</>
+							)}
+						</div>
+					) : (
+						<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+							{paginated.map((product) => (
+								<ProductCard
+									key={product.id}
+									product={product}
+									variant="default"
+								/>
+							))}
+						</div>
+					)}
 
 					{/* PAGINACIÓN */}
 					<div className="flex justify-center gap-3 text-sm">
