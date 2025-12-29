@@ -89,19 +89,12 @@ export default function ProductsSection({
 			return tokens.every((token) => {
 				const inTitle = p.title.toLowerCase().includes(token);
 				const inBrand = p.brand.toLowerCase().includes(token);
-				const inDescription = p.description
-					?.toLowerCase()
-					.includes(token);
-				const inTags = p.tags.some((t) =>
-					t.toLowerCase().includes(token)
-				);
 				const inVariants = p.variants.some((v) =>
 					v.weight.toLowerCase().includes(token)
 				);
 
-				return (
-					inTitle || inBrand || inDescription || inTags || inVariants
-				);
+				// Solo consideramos coincidencias en título, marca o peso de variante
+				return inTitle || inBrand || inVariants;
 			});
 		};
 

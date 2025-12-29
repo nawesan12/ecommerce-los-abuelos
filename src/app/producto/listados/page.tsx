@@ -1,13 +1,11 @@
-export const dynamic = "force-dynamic";
+"use client";
 
+import { useSearchParams } from "next/navigation";
 import ProductsSection from "@/src/components/products/productsSection";
 
-export default function ProductListingsPage({
-	searchParams,
-}: {
-	searchParams?: { q?: string };
-}) {
-	const query = searchParams?.q ?? "";
+export default function ProductListingsPage() {
+	const searchParams = useSearchParams();
+	const query = searchParams.get("q") ?? "";
 
 	return (
 		<div className="max-w-[1300px] mx-auto px-6 py-10">
