@@ -3,10 +3,11 @@
 import CategoryPoints from "./category-points";
 import PointsProgress from "./PointsProgress";
 import { pointsProducts, CATEGORY_LIMITS } from "./points-data";
+import { useAuth } from "@/src/stores/auth-store";
 
 export default function ProductsPoints() {
-	// 🔥 Los puntos del usuario vendrán del backend o Zustand más adelante
-	 const userPoints = 5000;
+	const { user } = useAuth();
+	const userPoints = user?.points ?? 0;
 
 	// Filtrar productos por categoría
 	const bronzeProducts = pointsProducts.filter(

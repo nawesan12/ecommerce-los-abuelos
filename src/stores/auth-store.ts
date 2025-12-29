@@ -7,6 +7,7 @@ interface UserData {
     email: string;
     telefono: string;
     dni:string;
+    points?: number;
 }
 
 interface AuthState {

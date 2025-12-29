@@ -35,6 +35,8 @@ export default function LoginPage() {
 			apellido: "",
 			email,
 			telefono: "",
+			dni: "",
+			points: 5000,
 		});
 
 		router.push("/user");

@@ -41,6 +41,8 @@ export default function RegisterPage() {
 			apellido: "",
 			email,
 			telefono: phone,
+			dni: "",
+			points: 5000,
 		});
 
 		router.push("/user");

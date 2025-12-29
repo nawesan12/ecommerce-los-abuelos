@@ -20,8 +20,9 @@ export default function Hero() {
 					</h1>
 
 					<p className="text-gray-700 text-base sm:text-lg mt-4 max-w-md">
-						Sociis blandit et pellentesque aliquet at quisque tortor
-						lacinia nullam. Mattis aenean scelerisque dui libero.
+						Cuidamos a tu mascota como si fuera parte de nuestra
+						familia. Productos de confianza para su bienestar, todos
+						los días.
 					</p>
 				</motion.div>
 

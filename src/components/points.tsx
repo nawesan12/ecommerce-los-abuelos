@@ -2,13 +2,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { pointsProducts } from "./puntos/points-data";
+import { useAuth } from "../stores/auth-store";
 
 export default function Points() {
 	const pathname = usePathname();
+	const { user } = useAuth();
 
-	//cambiar esto por BD o Zustand
-	const puntos = 5000;
+	// Por ahora fallback fijo de 5000 si no hay usuario cargado
+	const puntos = user?.points ?? 5000;
 
 	const isActive = pathname.startsWith("/puntos");
 
