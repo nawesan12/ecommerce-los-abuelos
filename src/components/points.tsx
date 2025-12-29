@@ -2,12 +2,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { pointsProducts } from "./puntos/points-data";
 
 export default function Points() {
 	const pathname = usePathname();
 
 	//cambiar esto por BD o Zustand
-	const puntos = 1000;
+	const puntos = 5000;
 
 	const isActive = pathname.startsWith("/puntos");
 

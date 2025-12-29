@@ -9,10 +9,12 @@ export default function ProductsSection({
 	categoryFilter,
 	species,
 	searchQuery,
+	includeTags,
 }: {
 	categoryFilter?: "secos" | "humedos" | "especiales" | null;
 	species?: "perro" | "gato";
 	searchQuery?: string;
+	includeTags?: string[];
 }) {
 	// ESTADOS DE FILTROS
 
@@ -82,6 +84,7 @@ export default function ProductsSection({
 				.toLowerCase()
 				.split(/\s+/)
 				.filter(Boolean) ?? [];
+		const tagTokens = includeTags?.map((t) => t.toLowerCase()) ?? [];
 
 		const matchesSearch = (p: Product) => {
 			if (tokens.length === 0) return true;
@@ -93,8 +96,11 @@ export default function ProductsSection({
 					v.weight.toLowerCase().includes(token)
 				);
 
-				// Solo consideramos coincidencias en título, marca o peso de variante
-				return inTitle || inBrand || inVariants;
+				const inTags = p.tags.some((t) =>
+					t.toLowerCase().includes(token)
+				);
+
+				return inTitle || inBrand || inVariants || inTags;
 			});
 		};
 
@@ -124,6 +130,15 @@ export default function ProductsSection({
 
 		// 🔹 Búsqueda por texto (todas las palabras deben coincidir en algún campo)
 		result = result.filter(matchesSearch);
+
+		// 🔹 Filtro adicional por tags explícitos
+		if (tagTokens.length > 0) {
+			result = result.filter((p) =>
+				tagTokens.some((tag) =>
+					p.tags.map((t) => t.toLowerCase()).includes(tag)
+				)
+			);
+		}
 
 		// 🔹 Filtros existentes
 		result = result.filter((p) => {

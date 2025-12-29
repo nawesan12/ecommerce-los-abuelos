@@ -1,35 +1,42 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 const categories = [
 	{
-		title: "Alimento Para Perro Adulto",
+		title: "Alimento Para Gato Adulto",
 		image: "/img/11.png",
 		count: 84,
-		href: "/perro/alimento-adulto",
+		filter: "Adulto",
 	},
 	{
-		title: "Alimento Para Cachorro",
+		title: "Alimento Para Gatito",
 		image: "/img/11.png",
 		count: 84,
-		href: "/perro/cachorro",
+		filter: "Cachorro",
 	},
 	{
 		title: "Alimento Específico",
 		image: "/img/11.png",
 		count: 84,
-		href: "/perro/especifico",
+		filter: "Especial",
 	},
 	{
 		title: "Alimentos Húmedos",
 		image: "/img/11.png",
 		count: 84,
-		href: "/perro/humedos",
+		filter: "Humedo",
 	},
 ];
 
-export default function DogCategories() {
+export default function CatCategories({
+	selected,
+	onSelect,
+}: {
+	selected: string | null;
+	onSelect: (value: string | null) => void;
+}) {
 	return (
 		<section className="w-full max-w-[1300px] mx-auto px-6 py-16">
 			<h2 className="text-[26px] sm:text-[32px] font-extrabold mb-10 text-left">
@@ -38,10 +45,18 @@ export default function DogCategories() {
 
 			<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 sm:gap-8">
 				{categories.map((cat) => (
-					<Link
+					<button
 						key={cat.title}
-						href={cat.href}
-						className="border border-[#F32947] rounded-2xl p-5 flex flex-col items-center hover:shadow-md transition cursor-pointer">
+						onClick={() =>
+							onSelect(
+								selected === cat.filter ? null : cat.filter
+							)
+						}
+						className={`border rounded-2xl p-5 flex flex-col items-center transition cursor-pointer w-full h-full ${
+							selected === cat.filter
+								? "border-[#F32947] shadow-md bg-[#fff5f7]"
+								: "border-[#F32947] hover:shadow-md"
+						}`}>
 						<div className="w-24 sm:w-32 h-24 sm:h-32 relative mb-4">
 							<Image
 								src={cat.image}
@@ -62,7 +77,7 @@ export default function DogCategories() {
 						<div className="w-full flex justify-end mt-2">
 							<ArrowRight className="text-[#F32947] w-4 h-4" />
 						</div>
-					</Link>
+					</button>
 				))}
 			</div>
 		</section>
