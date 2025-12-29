@@ -13,6 +13,19 @@ export default function LoginPage() {
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState<string | null>(null);
 
+	const handleGoogle = () => {
+		// Simulación de login con Google (placeholder hasta integrar OAuth real)
+		login({
+			name: "Usuario Google",
+			apellido: "",
+			email: "usuario.google@example.com",
+			telefono: "",
+			dni: "",
+			points: 5000,
+		});
+		router.push("/user");
+	};
+
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		setError(null);
@@ -105,7 +118,8 @@ export default function LoginPage() {
 				<div className="mt-6">
 					<button
 						type="button"
-						className="w-full border border-gray-300 rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-50">
+						className="w-full border border-gray-300 rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-50"
+						onClick={handleGoogle}>
 						<Image
 							src="/img/google-logo.png"
 							alt="Google"
