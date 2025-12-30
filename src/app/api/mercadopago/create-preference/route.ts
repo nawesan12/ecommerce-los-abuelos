@@ -23,25 +23,25 @@ export async function POST(req: Request) {
     }
 
     const preferenceBody = {
-      items: body.items.map((item: any) => ({
-        title: String(item.title ?? "Producto"),
-        unit_price: Number(item.price ?? 0),
-        quantity: Number(item.quantity ?? 1),
-        currency_id: "ARS",
-      })),
+  items: body.items.map((item: any) => ({
+    title: String(item.title),
+    unit_price: Number(item.price),
+    quantity: Number(item.quantity),
+    currency_id: "ARS",
+  })),
 
-      payer: {
-        email: String(body?.payer?.email ?? "test_user@test.com"),
-      },
+  payer: {
+    email: String(body?.payer?.email ?? "test_user@test.com"),
+  },
 
-      back_urls: {
-        success: "http://localhost:3000/pago/success",
-        failure: "http://localhost:3000/pago/failure",
-        pending: "http://localhost:3000/pago/pending",
-      },
-      auto_return: "approved",
-      
-    };
+  back_urls: {
+    success: "http://localhost:3000/pago/success",
+    failure: "http://localhost:3000/pago/failure",
+    pending: "http://localhost:3000/pago/pending",
+  },
+
+  
+};
 
     const result = await preferenceClient.create({ body: preferenceBody });
 
