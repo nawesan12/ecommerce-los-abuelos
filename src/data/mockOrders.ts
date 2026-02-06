@@ -1,4 +1,21 @@
-export const mockOrders = [
+export type OrderStatus = "Entregado" | "Pendiente" | "En camino";
+
+export type OrderItem = {
+	img: string;
+	name: string;
+	cantidad: number;
+	precio: number;
+};
+
+export type Order = {
+	id: string;
+	fecha: string;
+	estado: OrderStatus;
+	total: number;
+	items: OrderItem[];
+};
+
+export const mockOrders: Order[] = [
 	{
 		id: "12345",
 		fecha: "12/05/2025",

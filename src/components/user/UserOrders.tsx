@@ -3,6 +3,8 @@
 import { mockOrders, type Order } from "@/src/data/mockOrders";
 import { Package, ChevronRight } from "lucide-react";
 
+export type { Order };
+
 interface UserOrdersProps {
 	onSelectOrder: (order: Order) => void;
 }
