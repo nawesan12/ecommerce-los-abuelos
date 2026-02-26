@@ -1,0 +1,181 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  ADMIN
+  CUSTOMER
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAID
+  PREPARING
+  READY_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+model Tenant {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  currencyCode String   @default("ARS")
+  timezone     String   @default("America/Argentina/Buenos_Aires")
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  users    User[]
+  products Product[]
+  orders   Order[]
+  payments Payment[]
+}
+
+model User {
+  id        String   @id @default(cuid())
+  tenantId  String
+  email     String
+  fullName  String?
+  role      UserRole @default(CUSTOMER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  orders Order[]
+
+  @@unique([tenantId, email])
+  @@index([tenantId, role])
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  tenantId    String
+  externalRef String
+  slug        String
+  title       String
+  description String
+  brand       String
+  imageUrl    String?
+  category    String?
+  tags        String[] @default([])
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant     Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  variants   ProductVariant[]
+  orderItems OrderItem[]
+
+  @@unique([tenantId, externalRef])
+  @@unique([tenantId, slug])
+  @@index([tenantId, category])
+  @@index([tenantId, isActive])
+}
+
+model ProductVariant {
+  id           String   @id @default(cuid())
+  productId    String
+  externalRef  String
+  sku          String?
+  label        String
+  priceInCents Int
+  stock        Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
+
+  @@unique([productId, externalRef])
+  @@unique([productId, label])
+  @@unique([sku])
+  @@index([productId, isActive])
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  tenantId        String
+  userId          String?
+  status          OrderStatus @default(PENDING_PAYMENT)
+  customerEmail   String?
+  customerName    String?
+  customerPhone   String?
+  currencyCode    String      @default("ARS")
+  subtotalInCents Int
+  shippingInCents Int         @default(0)
+  totalInCents    Int
+  notes           String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  paidAt          DateTime?
+  cancelledAt     DateTime?
+
+  tenant   Tenant      @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  user     User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items    OrderItem[]
+  payments Payment[]
+
+  @@index([tenantId, status, createdAt])
+  @@index([tenantId, userId])
+}
+
+model OrderItem {
+  id                   String   @id @default(cuid())
+  orderId              String
+  productId            String
+  variantId            String
+  quantity             Int
+  unitPriceInCents     Int
+  lineTotalInCents     Int
+  titleSnapshot        String
+  variantLabelSnapshot String
+  createdAt            DateTime @default(now())
+
+  order   Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product        @relation(fields: [productId], references: [id], onDelete: Restrict)
+  variant ProductVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+
+  @@unique([orderId, variantId])
+  @@index([orderId])
+  @@index([variantId])
+}
+
+model Payment {
+  id                   String        @id @default(cuid())
+  tenantId             String
+  orderId              String
+  provider             String        @default("mercadopago")
+  status               PaymentStatus @default(PENDING)
+  amountInCents        Int
+  currencyCode         String        @default("ARS")
+  providerPreferenceId String?
+  providerPaymentId    String?
+  externalReference    String?
+  rawPayload           Json?
+  processedAt          DateTime?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  order  Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, provider, providerPaymentId])
+  @@unique([tenantId, provider, providerPreferenceId])
+  @@index([tenantId, status, createdAt])
+  @@index([orderId])
+}

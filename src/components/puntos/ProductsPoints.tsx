@@ -7,11 +7,11 @@ import { useAuth } from "@/src/stores/auth-store";
 
 export default function ProductsPoints() {
 	const { user } = useAuth();
-	const userPoints = user?.points ?? 0;
+	const userPoints = user?.points ?? 5000;
 
 	// Filtrar productos por categoría
 	const bronzeProducts = pointsProducts.filter(
-		(p) => p.category === "bronce"
+		(p) => p.category === "bronce",
 	);
 	const silverProducts = pointsProducts.filter((p) => p.category === "plata");
 	const goldProducts = pointsProducts.filter((p) => p.category === "oro");
