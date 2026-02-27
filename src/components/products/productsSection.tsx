@@ -10,11 +10,13 @@ export default function ProductsSection({
 	species,
 	searchQuery,
 	includeTags,
+	initialProducts,
 }: {
 	categoryFilter?: "secos" | "humedos" | "especiales" | null;
 	species?: "perro" | "gato";
 	searchQuery?: string;
 	includeTags?: string[];
+	initialProducts?: Product[];
 }) {
 	// ESTADOS DE FILTROS
 
@@ -24,13 +26,31 @@ export default function ProductsSection({
 	const [page, setPage] = useState(1);
 	const [sort, setSort] = useState("none");
 
-	const [allProducts, setAllProducts] = useState<Product[]>([]);
+	const hasInitialProducts = initialProducts !== undefined;
+	const [allProducts, setAllProducts] = useState<Product[]>(
+		initialProducts ?? []
+	);
 
 	const productsTopRef = useRef<HTMLElement | null>(null);
 
 	useEffect(() => {
-		getProducts().then(setAllProducts);
-	}, []);
+		if (hasInitialProducts) {
+			setAllProducts(initialProducts ?? []);
+			return;
+		}
+
+		let cancelled = false;
+
+		getProducts().then((products) => {
+			if (!cancelled) {
+				setAllProducts(products);
+			}
+		});
+
+		return () => {
+			cancelled = true;
+		};
+	}, [hasInitialProducts, initialProducts]);
 
 	useEffect(() => {
 		setPage(1);

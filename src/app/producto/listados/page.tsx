@@ -1,11 +1,16 @@
-"use client";
-
-import { useSearchParams } from "next/navigation";
 import ProductsSection from "@/src/components/products/productsSection";
+import { DEFAULT_TENANT_SLUG, getProducts } from "@/src/server/catalog";
 
-export default function ProductListingsPage() {
-	const searchParams = useSearchParams();
-	const query = searchParams.get("q") ?? "";
+export const dynamic = "force-dynamic";
+
+export default async function ProductListingsPage({
+	searchParams,
+}: {
+	searchParams: Promise<{ q?: string }>;
+}) {
+	const { q } = await searchParams;
+	const query = q ?? "";
+	const products = await getProducts(DEFAULT_TENANT_SLUG);
 
 	return (
 		<div className="max-w-[1300px] mx-auto px-6 py-10">
@@ -20,7 +25,7 @@ export default function ProductListingsPage() {
 				</p>
 			</header>
 
-			<ProductsSection searchQuery={query} />
+			<ProductsSection searchQuery={query} initialProducts={products} />
 		</div>
 	);
 }

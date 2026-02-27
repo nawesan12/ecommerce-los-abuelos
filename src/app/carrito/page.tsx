@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -18,11 +18,13 @@ import { Input } from "@/components/ui/input";
 import { formatCurrency } from "@/lib/currency";
 import ProductCard from "@/src/components/products/ProductCard";
 import { useCartStore } from "@/src/stores/cart-store";
-import { mockProducts } from "@/src/data/mock-products";
 import { toast } from "sonner";
+import { getProducts } from "@/lib/products";
+import type { Product } from "@/src/types/product";
 
 export default function CarritoPage() {
 	const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+	const [recommendedProducts, setRecommendedProducts] = useState<Product[]>([]);
 
 	const titles = {
 		1: "Tu Carrito",
@@ -33,20 +35,45 @@ export default function CarritoPage() {
 
 	const cartItems = useCartStore((state) => state.items);
 
+	useEffect(() => {
+		let cancelled = false;
+
+		getProducts().then((products) => {
+			if (!cancelled) {
+				setRecommendedProducts(products.slice(0, 4));
+			}
+		});
+
+		return () => {
+			cancelled = true;
+		};
+	}, []);
+
 	async function handleCheckout(cartItems: any[]) {
 		try {
-			const res = await fetch("/api/mercadopago/create-preference", {
+			if (cartItems.length === 0) {
+				toast.error("El carrito está vacío");
+				return;
+			}
+
+			const idempotencyKey =
+				typeof crypto !== "undefined" && "randomUUID" in crypto
+					? crypto.randomUUID()
+					: `${Date.now()}-${Math.random()}`;
+
+			const res = await fetch("/api/checkout", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
+					"Idempotency-Key": idempotencyKey,
 				},
 				body: JSON.stringify({
-					payer: {
+					customer: {
 						email: "test_user_351831898137148704@testuser.com",
 					},
 					items: cartItems.map((item) => ({
-						title: item.title,
-						price: item.price,
+						productId: item.productId,
+						variantId: item.id,
 						quantity: item.quantity,
 					})),
 				}),
@@ -54,11 +81,13 @@ export default function CarritoPage() {
 
 			const data = await res.json();
 
-			if (!data.sandbox_init_point) {
-				throw new Error("No se pudo generar la preferencia");
+			const checkoutUrl = data?.payment?.checkoutUrl;
+
+			if (!res.ok || !checkoutUrl) {
+				throw new Error(data?.message || "No se pudo generar la preferencia");
 			}
 
-			window.location.href = data.sandbox_init_point;
+			window.location.href = checkoutUrl;
 		} catch (error) {
 			console.error(error);
 			toast.error("Error al iniciar el pago con Mercado Pago");
@@ -136,7 +165,7 @@ export default function CarritoPage() {
 							PRODUCTOS RECOMENDADOS
 						</h2>
 						<div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-							{mockProducts.slice(0, 4).map((p) => (
+							{recommendedProducts.map((p) => (
 								<ProductCard key={p.id} product={p} />
 							))}
 						</div>

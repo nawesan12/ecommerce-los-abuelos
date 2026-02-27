@@ -1,5 +1,9 @@
 import Link from "next/link";
-import { getProductById, getProducts } from "@/lib/products";
+import {
+	DEFAULT_TENANT_SLUG,
+	getProductById,
+	getProducts,
+} from "@/src/server/catalog";
 import ProductView from "./ProductView";
 
 export default async function ProductPage({
@@ -9,7 +13,7 @@ export default async function ProductPage({
 }) {
 	const { id } = await params;
 
-	const product = await getProductById(id);
+	const product = await getProductById(DEFAULT_TENANT_SLUG, id);
 
 	if (!product) {
 		return (
@@ -24,7 +28,7 @@ export default async function ProductPage({
 		);
 	}
 
-	const all = await getProducts();
+	const all = await getProducts(DEFAULT_TENANT_SLUG);
 	const similares = all.filter((p) => p.id !== id).slice(0, 4);
 
 	return (

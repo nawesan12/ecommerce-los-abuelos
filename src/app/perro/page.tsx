@@ -1,35 +1,10 @@
-'use client';
+import PerroPageClient from "@/src/app/perro/PerroPageClient";
+import { DEFAULT_TENANT_SLUG, getProducts } from "@/src/server/catalog";
 
-import { useState } from "react";
-import BrandsCarousel from "@/src/components/perro/BrandsCarousel";
-import DogCategories from "@/src/components/perro/CategorieDog";
-import HeroPerro from "@/src/components/perro/heroPerro";
-import ProductsSection from "@/src/components/products/productsSection";
+export const dynamic = "force-dynamic";
 
-export default function Page() {
-	const [quickFilter, setQuickFilter] = useState<string | null>(null);
+export default async function PerroPage() {
+	const products = await getProducts(DEFAULT_TENANT_SLUG, { category: "perro" });
 
-	const searchFromQuick = quickFilter ?? null;
-	const tagFilter =
-		quickFilter === "humedo" ||
-		quickFilter === "especial" ||
-		quickFilter === "cachorro" ||
-		quickFilter === "adulto"
-			? [quickFilter]
-			: [];
-
-	return (
-		<>
-			<HeroPerro />
-
-			<DogCategories selected={quickFilter} onSelect={setQuickFilter} />
-			<BrandsCarousel />
-
-			<ProductsSection
-				species="perro"
-				searchQuery={searchFromQuick || undefined}
-				includeTags={tagFilter}
-			/>
-		</>
-	);
+	return <PerroPageClient initialProducts={products} />;
 }

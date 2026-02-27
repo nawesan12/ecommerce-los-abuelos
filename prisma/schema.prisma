@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -19,6 +19,7 @@ enum OrderStatus {
   PREPARING
   READY_FOR_DELIVERY
   DELIVERED
+  FAILED
   CANCELLED
 }
 
@@ -27,6 +28,13 @@ enum PaymentStatus {
   APPROVED
   REJECTED
   CANCELLED
+}
+
+enum ReconciliationStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  DEAD
 }
 
 model Tenant {
@@ -39,10 +47,13 @@ model Tenant {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  users    User[]
-  products Product[]
-  orders   Order[]
-  payments Payment[]
+  users              User[]
+  products           Product[]
+  orders             Order[]
+  payments           Payment[]
+  paymentEvents      PaymentEvent[]
+  idempotencyKeys    IdempotencyKey[]
+  reconciliationJobs PaymentReconciliationJob[]
 }
 
 model User {
@@ -123,12 +134,16 @@ model Order {
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   paidAt          DateTime?
+  failedAt        DateTime?
   cancelledAt     DateTime?
 
-  tenant   Tenant      @relation(fields: [tenantId], references: [id], onDelete: Restrict)
-  user     User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
-  items    OrderItem[]
-  payments Payment[]
+  tenant             Tenant                     @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  user               User?                      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items              OrderItem[]
+  payments           Payment[]
+  paymentEvents      PaymentEvent[]
+  idempotencyKeys    IdempotencyKey[]
+  reconciliationJobs PaymentReconciliationJob[]
 
   @@index([tenantId, status, createdAt])
   @@index([tenantId, userId])
@@ -171,11 +186,84 @@ model Payment {
   createdAt            DateTime      @default(now())
   updatedAt            DateTime      @updatedAt
 
-  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
-  order  Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  tenant             Tenant                     @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  order              Order                      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  events             PaymentEvent[]
+  reconciliationJobs PaymentReconciliationJob[]
 
   @@unique([tenantId, provider, providerPaymentId])
   @@unique([tenantId, provider, providerPreferenceId])
   @@index([tenantId, status, createdAt])
+  @@index([orderId])
+}
+
+model PaymentEvent {
+  id               String    @id @default(cuid())
+  tenantId         String
+  orderId          String?
+  paymentId        String?
+  provider         String    @default("mercadopago")
+  rawEventId       String
+  eventType        String?
+  paymentReference String?
+  signatureValid   Boolean   @default(false)
+  payload          Json
+  processedAt      DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  tenant  Tenant   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  order   Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  payment Payment? @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+
+  @@unique([tenantId, provider, rawEventId])
+  @@index([tenantId, createdAt])
+  @@index([orderId])
+  @@index([paymentId])
+}
+
+model IdempotencyKey {
+  id             String   @id @default(cuid())
+  tenantId       String
+  key            String
+  requestHash    String
+  orderId        String?
+  responseStatus Int?
+  responseBody   Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  order  Order? @relation(fields: [orderId], references: [id], onDelete: SetNull)
+
+  @@unique([tenantId, key])
+  @@index([tenantId, createdAt])
+  @@index([orderId])
+}
+
+model PaymentReconciliationJob {
+  id                 String               @id @default(cuid())
+  tenantId           String
+  orderId            String?
+  paymentId          String
+  provider           String               @default("mercadopago")
+  externalReference  String?
+  status             ReconciliationStatus @default(PENDING)
+  attempt            Int                  @default(0)
+  maxAttempts        Int                  @default(7)
+  nextRetryAt        DateTime             @default(now())
+  lastAttemptAt      DateTime?
+  finishedAt         DateTime?
+  lastProviderStatus String?
+  lastError          String?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+
+  tenant  Tenant  @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  order   Order?  @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  payment Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, paymentId])
+  @@index([tenantId, status, nextRetryAt])
   @@index([orderId])
 }

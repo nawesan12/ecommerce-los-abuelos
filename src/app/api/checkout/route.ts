@@ -1,7 +1,5 @@
 import { handleCheckoutPost } from "@/src/server/checkout/http";
 
-// Deprecated alias: kept for backward compatibility.
-// Secure checkout flow is implemented in POST /api/checkout.
 export async function POST(request: Request) {
   return handleCheckoutPost(request);
 }

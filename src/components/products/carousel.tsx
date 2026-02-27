@@ -14,12 +14,32 @@ import { useEffect, useState } from "react";
 import { getProducts } from "@/lib/products";
 import type { Product } from "@/src/types/product";
 
-export default function ProductCarousel() {
-	const [products, setProducts] = useState<Product[]>([]);
+export default function ProductCarousel({
+	initialProducts,
+}: {
+	initialProducts?: Product[];
+}) {
+	const hasInitialProducts = initialProducts !== undefined;
+	const [products, setProducts] = useState<Product[]>(initialProducts ?? []);
 
 	useEffect(() => {
-		getProducts().then(setProducts);
-	}, []);
+		if (hasInitialProducts) {
+			setProducts(initialProducts ?? []);
+			return;
+		}
+
+		let cancelled = false;
+
+		getProducts().then((nextProducts) => {
+			if (!cancelled) {
+				setProducts(nextProducts);
+			}
+		});
+
+		return () => {
+			cancelled = true;
+		};
+	}, [hasInitialProducts, initialProducts]);
 
 	return (
 		<section className="max-w-[1300px] mx-auto px-6 py-16 ">

@@ -1,35 +1,10 @@
-'use client';
+import GatoPageClient from "@/src/app/gato/GatoPageClient";
+import { DEFAULT_TENANT_SLUG, getProducts } from "@/src/server/catalog";
 
-import { useState } from "react";
-import HeroCat from "@/src/components/gato/HeroCat";
-import BrandsCarousel from "@/src/components/perro/BrandsCarousel";
-import CatCategories from "@/src/components/gato/CatCategories";
-import ProductsSection from "@/src/components/products/productsSection";
+export const dynamic = "force-dynamic";
 
-export default function Page() {
-	const [quickFilter, setQuickFilter] = useState<string | null>(null);
+export default async function GatoPage() {
+	const products = await getProducts(DEFAULT_TENANT_SLUG, { category: "gato" });
 
-	const searchFromQuick = quickFilter ?? null;
-	const tagFilter =
-		quickFilter === "humedo" ||
-		quickFilter === "especial" ||
-		quickFilter === "cachorro" ||
-		quickFilter === "adulto"
-			? [quickFilter]
-			: [];
-
-	return (
-		<>
-			<HeroCat />
-
-			<CatCategories selected={quickFilter} onSelect={setQuickFilter} />
-			<BrandsCarousel />
-
-			<ProductsSection
-				species="gato"
-				searchQuery={searchFromQuick || undefined}
-				includeTags={tagFilter}
-			/>
-		</>
-	);
+	return <GatoPageClient initialProducts={products} />;
 }
